@@ -1,4 +1,5 @@
 import datetime
+import fileinput
 import os
 import shutil
 
@@ -27,14 +28,22 @@ def create_zet(
             created zet.
     """
     today = datetime.datetime.now()
+    today_str = str(today.strftime("%Y%m%d%H%M%S"))
 
-    full_path = os.path.join(
-        folder, str(today.year), str(today.month), today.strftime("%Y%m%d%H%M%S")
-    )
+    full_path = os.path.join(folder, str(today.year), str(today.month), today_str)
     filename = os.path.join(full_path, "readme.md")
+
+    metadata = [["templateDate", today_str], ["templateTitle", title]]
 
     if not os.path.exists(full_path):
         os.makedirs(full_path)
-        shutil.copyfile(template, filename)
+        new_file = shutil.copyfile(template, filename)
+
+        with fileinput.FileInput(new_file, inplace=True, backup=".bak") as file:
+            for line in file:
+                for item in metadata:
+                    line.replace(item[0], item[1])
+                # line = re.sub(r"/{({word_match}*)}/".format(word_match=item[0]), item[1], line)
+        fileinput.close()
 
     return filename

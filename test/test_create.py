@@ -38,3 +38,16 @@ def test_unique_zets(tmp_path):
     time.sleep(1)
     zet_two = create_zet("some title", tmp_path)
     assert zet_one != zet_two
+
+
+def test_zet_metadata(tmp_path):
+    zet = create_zet("some title", tmp_path)
+    print(zet)
+    zet_file = open(zet)
+    text = ""
+    for line in zet_file:
+        print(line)
+        text += line
+
+    assert "templateDate" not in text
+    assert "templateTitle" not in text
