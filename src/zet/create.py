@@ -5,7 +5,9 @@ import shutil
 from .settings import ZET_DEFAULT, ZET_TEMPLATE
 
 
-def create_zet(folder: str = ZET_DEFAULT, template: str = ZET_TEMPLATE) -> str:
+def create_zet(
+    title: str, folder: str = ZET_DEFAULT, template: str = ZET_TEMPLATE
+) -> str:
     """Creates a new zet.
 
     Takes in the zet folder and returns
@@ -13,8 +15,12 @@ def create_zet(folder: str = ZET_DEFAULT, template: str = ZET_TEMPLATE) -> str:
     be time sensitive.
 
     Params:
+        title (str): Title of the zet,
+            does not replace filename.
         folder (str): String with the
             parent folder path.
+        template (str): Template path
+            for the file.
 
     Returns:
         zet_path (str): Full path to the newly

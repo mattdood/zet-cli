@@ -12,7 +12,7 @@ from src.zet.settings import ZET_DEFAULT, ZET_TEMPLATE
 
 @pytest.fixture
 def zet(folder: str = ZET_DEFAULT, template: str = ZET_TEMPLATE) -> str:
-    sample_zet = create_zet(folder, template)
+    sample_zet = create_zet("some title", folder, template)
     return sample_zet
 
 
@@ -23,7 +23,7 @@ def zet_list(
 
     for i in range(zet_count):
         time.sleep(1)
-        create_zet(folder, template)
+        create_zet("some title", folder, template)
     sample_zets = list_zets(folder)
 
     return sample_zets
@@ -39,7 +39,7 @@ def zet_list_paths(
 
     for i in range(zet_count):
         time.sleep(1)
-        create_zet(folder, template)
+        create_zet("some title", folder, template)
     sample_zets = list_zets(folder, full_path)
 
     return sample_zets
