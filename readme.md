@@ -1,2 +1,2 @@
-# Zet
+# Zet CLI
 A Zettlekasten helper utility.
