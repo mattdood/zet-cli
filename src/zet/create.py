@@ -31,7 +31,7 @@ def create_zet(
     today_str = str(today.strftime("%Y%m%d%H%M%S"))
 
     full_path = os.path.join(folder, str(today.year), str(today.month), today_str)
-    filename = os.path.join(full_path, "readme.md")
+    filename = os.path.join(full_path, title)
 
     metadata = [["templateDate", today_str], ["templateTitle", title]]
 
@@ -39,11 +39,12 @@ def create_zet(
         os.makedirs(full_path)
         new_file = shutil.copyfile(template, filename)
 
-        with fileinput.FileInput(new_file, inplace=True, backup=".bak") as file:
-            for line in file:
-                for item in metadata:
-                    line.replace(item[0], item[1])
-                # line = re.sub(r"/{({word_match}*)}/".format(word_match=item[0]), item[1], line)
+        for line in fileinput.input(new_file, inplace=True):
+            for item in metadata:
+                line = line.replace(item[0], item[1])
+            print(line, end="")
+
+            # line = re.sub(r"/{({word_match}*)}/".format(word_match=item[0]), item[1], line)
         fileinput.close()
 
     return filename
