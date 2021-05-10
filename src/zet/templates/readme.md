@@ -1,5 +1,5 @@
 |  Title | Category  | Tags  | Date |
 | ------------ | ------------ | ------------ | ----|
-| templateTitle |   |   | templateDate |
+| templateTitle | templateCategory  | templateTags  | templateDate |
 
 # templateTitle
