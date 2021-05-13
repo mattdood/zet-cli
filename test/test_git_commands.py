@@ -1,4 +1,3 @@
-import os
 import pytest
 
 from src.zet.git_commands import git_add_zets

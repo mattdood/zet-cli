@@ -3,11 +3,11 @@ import fileinput
 import os
 import shutil
 
-from .settings import ZET_DEFAULT, ZET_TEMPLATE
+from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE
 
 
 def create_zet(
-    title: str, folder: str = ZET_DEFAULT, template: str = ZET_TEMPLATE
+    title: str, folder: str = ZET_DEFAULT_FOLDER, template: str = ZET_DEFAULT_TEMPLATE
 ) -> str:
     """Creates a new zet.
 

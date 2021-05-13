@@ -1,10 +1,10 @@
 import os
 from typing import List
 
-from .settings import ZET_DEFAULT
+from .settings import ZET_DEFAULT_FOLDER
 
 
-def list_zets(folder: str = ZET_DEFAULT, full_path: bool = False) -> List[str]:
+def list_zets(folder: str = ZET_DEFAULT_FOLDER, full_path: bool = False) -> List[str]:
     """Lists zets.
 
     This will be a catch-all for listing

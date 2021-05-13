@@ -4,7 +4,7 @@ import time
 import pytest
 
 from src.zet.create import create_zet
-from src.zet.settings import ZET_DEFAULT, ZET_TEMPLATE
+from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE
 
 
 def test_zet_exists(tmp_path):
@@ -15,9 +15,9 @@ def test_zet_exists(tmp_path):
 @pytest.mark.parametrize(
     "title, folder, template",
     [
-        ("some title", ZET_DEFAULT, ZET_TEMPLATE),
+        ("some title", ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE),
         ("some title", "~/some_test/", None),
-        ("some title", "~/some_test/", ZET_TEMPLATE),
+        ("some title", "~/some_test/", ZET_DEFAULT_TEMPLATE),
     ],
 )
 def test_zet_arguments(title, folder, template, tmp_path):
