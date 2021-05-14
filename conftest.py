@@ -1,3 +1,4 @@
+import os
 import subprocess
 import time
 from typing import Dict, List
@@ -7,7 +8,7 @@ import pytest
 from src.zet.create import create_zet
 from src.zet.git_commands import git_add_zets, git_commit_zets, git_init_zets
 from src.zet.list import list_zets
-from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE
+from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE, ZET_PROJECT
 
 
 @pytest.fixture
@@ -79,3 +80,8 @@ def zet_repo_changes(zet_repo) -> str:
 def zet_repo_commit(zet_repo_changes) -> str:
     git_commit_zets("some message", zet_repo_changes)
     return zet_repo_changes
+
+
+@pytest.fixture
+def zet_main_path(project_path: str = ZET_PROJECT):
+    return os.path.join(project_path, "main.py")
