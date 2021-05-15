@@ -13,7 +13,7 @@ def test_zet_exists(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "title, folder, template",
+    "title, folder, repo_name, template",
     [
         ("some title", ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE),
         ("some title", "~/some_test/", None),

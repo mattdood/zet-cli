@@ -2,12 +2,16 @@ import datetime
 import fileinput
 import os
 import shutil
+from typing import Dict
 
-from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE
+from src.zet.settings import ZET_DEFAULT_TEMPLATE, ZET_FOLDERS
 
 
 def create_zet(
-    title: str, folder: str = ZET_DEFAULT_FOLDER, template: str = ZET_DEFAULT_TEMPLATE
+    title: str,
+    zet_repo: str = ZET_FOLDERS["zet"],
+    folder: Dict[str, str] = ZET_FOLDERS,
+    template: str = ZET_DEFAULT_TEMPLATE,
 ) -> str:
     """Creates a new zet.
 
@@ -30,7 +34,9 @@ def create_zet(
     today = datetime.datetime.now()
     today_str = str(today.strftime("%Y%m%d%H%M%S"))
 
-    full_path = os.path.join(folder, str(today.year), str(today.month), today_str)
+    full_path = os.path.join(
+        folder[zet_repo], str(today.year), str(today.month), today_str
+    )
     filename = os.path.join(full_path, title)
 
     metadata = [["templateDate", today_str], ["templateTitle", title]]

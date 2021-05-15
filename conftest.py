@@ -8,26 +8,28 @@ import pytest
 from src.zet.create import create_zet
 from src.zet.git_commands import git_add_zets, git_commit_zets, git_init_zets
 from src.zet.list import list_zets
-from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE, ZET_PROJECT
+from src.zet.settings import ZET_DEFAULT_TEMPLATE, ZET_FOLDERS, ZET_PROJECT
 
 
 @pytest.fixture
-def zet(folder: str = ZET_DEFAULT_FOLDER, template: str = ZET_DEFAULT_TEMPLATE) -> str:
-    sample_zet = create_zet("some title", folder, template)
+def zet(
+    folder: Dict[str, str] = ZET_FOLDERS, template: str = ZET_DEFAULT_TEMPLATE
+) -> str:
+    sample_zet = create_zet("some title", folder["zet"], template)
     return sample_zet
 
 
 @pytest.fixture
 def zet_list(
     zet_count: int = 5,
-    folder: str = ZET_DEFAULT_FOLDER,
+    folder: Dict[str, str] = ZET_FOLDERS,
     template: str = ZET_DEFAULT_TEMPLATE,
 ) -> List[str]:
 
     for i in range(zet_count):
         time.sleep(1)
-        create_zet("some title", folder, template)
-    sample_zets = list_zets(folder)
+        create_zet("some title", folder["zet"], template)
+    sample_zets = list_zets(folder["zet"])
 
     return sample_zets
 
@@ -36,21 +38,21 @@ def zet_list(
 def zet_list_paths(
     zet_count: int = 5,
     full_path: bool = True,
-    folder: str = ZET_DEFAULT_FOLDER,
+    folder: Dict[str, str] = ZET_FOLDERS,
     template: str = ZET_DEFAULT_TEMPLATE,
 ) -> List[str]:
 
     for i in range(zet_count):
         time.sleep(1)
-        create_zet("some title", folder, template)
-    sample_zets = list_zets(folder, full_path)
+        create_zet("some title", folder["zet"], template)
+    sample_zets = list_zets(folder["zet"], full_path)
 
     return sample_zets
 
 
 @pytest.fixture
-def zet_folder(folder: str = ZET_DEFAULT_FOLDER) -> str:
-    return folder
+def zet_folder(folder: Dict[str, str] = ZET_FOLDERS) -> str:
+    return folder["zet"]
 
 
 @pytest.fixture
