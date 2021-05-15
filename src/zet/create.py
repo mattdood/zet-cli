@@ -9,7 +9,7 @@ from src.zet.settings import ZET_DEFAULT_TEMPLATE, ZET_FOLDERS
 
 def create_zet(
     title: str,
-    zet_repo: str = ZET_FOLDERS["zet"],
+    zet_repo: str = ZET_FOLDERS["zets"],
     folder: Dict[str, str] = ZET_FOLDERS,
     template: str = ZET_DEFAULT_TEMPLATE,
 ) -> str:

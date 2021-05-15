@@ -5,7 +5,7 @@ from .settings import ZET_DEFAULT_FOLDER, ZET_FOLDERS
 
 
 def list_zets(
-    zet_repo: str = ZET_DEFAULT_FOLDER["zet"],
+    zet_repo: str = ZET_DEFAULT_FOLDER["zets"],
     folder: Dict[str, str] = ZET_FOLDERS,
     full_path: bool = False,
 ) -> List[str]:
