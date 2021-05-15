@@ -1,8 +1,11 @@
 """Zet tool's main execution."""
 import argparse
+import sys
+from typing import Optional, Sequence
 
 
-def main():
+def main(argv: Optional[Sequence[str]] = None):
+    argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser(
         prog="zet", description="Zettlekasten command line tools"
     )
@@ -19,7 +22,7 @@ def main():
         help="A zet repo folder name. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_create.add_argument(
-        "-template", "--template", action="store", help="A zet template name."
+        "-tem", "--template", action="store", help="A zet template name."
     )
 
     parser_list = subparsers.add_parser("list", help="List zets from a folder.")
@@ -74,6 +77,11 @@ def main():
         action="store",
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
+
+    if len(argv) == 0:
+        argv = ["help"]
+    args = parser.parse_args(argv)
+    print(args.__dict__)
 
 
 if __name__ == "__main__":
