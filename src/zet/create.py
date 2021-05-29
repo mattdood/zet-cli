@@ -22,6 +22,7 @@ def create_zet(
     Params:
         title (str): Title of the zet,
             does not replace filename.
+        zet_repo (str): A zet repo name.
         folder (str): String with the
             parent folder path.
         template (str): Template path
