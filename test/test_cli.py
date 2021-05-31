@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+import pytest
+
 
 def capture(command):
     proc = subprocess.Popen(
@@ -17,6 +19,7 @@ def test_entrypoint():
     assert exit_status == 0
 
 
+@pytest.mark.skip(reason="Unfinished test, may not be needed.")
 def test_zet_helps(zet_main_path):
     command = ["python3", zet_main_path, "--help"]
     out, err, exitcode = capture(command)
@@ -24,6 +27,7 @@ def test_zet_helps(zet_main_path):
     assert "help" in str(out)
 
 
+@pytest.mark.skip(reason="Unfinished test, may not be needed.")
 def test_zet_sample_parse(zet_main_path):
     command = ["python3", zet_main_path, "create", "-t test_title"]
     out, err, exitcode = capture(command)
