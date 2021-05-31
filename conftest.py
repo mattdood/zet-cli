@@ -123,5 +123,3 @@ def zet_tmp_env(tmp_path) -> str:
     tmp_env_path = os.path.join(str(tmp_path), ".local.json")
     create_env(tmp_env_path)
     return tmp_env_path
-
-

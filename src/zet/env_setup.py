@@ -6,8 +6,7 @@ from src.zet.settings import ZET_ENV_PATH, ZET_HOME
 
 
 def create_env(env_path: str = ZET_ENV_PATH) -> None:
-    """Creates a zet env file.
-    """
+    """Creates a zet env file."""
     example_path = os.path.join(ZET_HOME, ".env/.example.json")
 
     if not os.path.exists(env_path):
@@ -43,5 +42,4 @@ def add_repo(zet_repo: str, zet_path: str, env_path: str = ZET_ENV_PATH) -> None
     repos = config_data["zet_repos"]
     repos.update(new_repo)
     config_file.seek(0)
-    json.dump(config_data, config_file, indent = 4)
-
+    json.dump(config_data, config_file, indent=4)

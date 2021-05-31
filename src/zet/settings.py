@@ -2,7 +2,6 @@ import json
 import os
 from pathlib import Path
 
-
 ZET_PROJECT = Path(__file__)
 ZET_HOME = ZET_PROJECT.parents[2]
 
@@ -15,6 +14,7 @@ ZET_DEFAULT_TEMPLATE = os.path.join(ZET_HOME, "src/zet", "templates/readme.md")
 
 if not os.path.exists(ZET_ENV_PATH):
     from .env_setup import add_repo, create_env
+
     create_env()
     default_key = list(ZET_DEFAULT_FOLDER.keys())[0]
     add_repo(default_key, ZET_DEFAULT_FOLDER[default_key])

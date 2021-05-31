@@ -19,4 +19,3 @@ def test_add_repo(zet_tmp_env, tmp_path):
     with open(zet_tmp_env, "r") as file:
         zet_env = json.load(file)["zet_repos"]
         assert {zet_repo: zet_path} == zet_env
-

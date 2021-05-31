@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from src.zet.create import create_zet, bulk_import_zets
+from src.zet.create import bulk_import_zets, create_zet
 from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE
 
 
@@ -73,4 +73,3 @@ def test_bulk_create_zets(tmp_path, zet_default_repo, zet_folders):
         for line in zet_file:
             text += line
         assert "some test text" in text
-
