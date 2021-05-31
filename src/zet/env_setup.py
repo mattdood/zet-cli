@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 
-from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_ENV_PATH, ZET_HOME
+from src.zet.settings import ZET_ENV_PATH, ZET_HOME
 
 
 def create_env(env_path: str = ZET_ENV_PATH) -> None:

@@ -2,7 +2,6 @@ import json
 import os
 
 from src.zet.env_setup import add_repo, create_env
-from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_ENV_PATH
 
 
 def test_env_creates(tmp_path):

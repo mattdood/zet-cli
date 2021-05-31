@@ -9,3 +9,4 @@ def test_zets_exist_path(zet_list_paths):
 def test_zets_name(zet_list):
     assert all("/" not in sample_zet for sample_zet in zet_list)
     assert all("\\" not in sample_zet for sample_zet in zet_list)
+
