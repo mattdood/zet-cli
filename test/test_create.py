@@ -67,8 +67,8 @@ def test_bulk_create_zets(tmp_path, zet_default_repo, zet_folders):
 
     for zet in zet_list:
         assert os.path.exists(zet["existing_path"])
-        assert os.path.exists(zet["zet_path"])
-        zet_file = open(zet["zet_path"])
+        assert os.path.exists(zet["zet_file_path"])
+        zet_file = open(zet["zet_file_path"])
         text = ""
         for line in zet_file:
             text += line
