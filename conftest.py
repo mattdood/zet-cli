@@ -16,6 +16,7 @@ from src.zet.settings import (
     ZET_FOLDERS,
     ZET_PROJECT,
 )
+from zet.env_setup import create_env
 
 
 @pytest.fixture
@@ -115,3 +116,12 @@ def zet_repo_commit(zet_test_repo, zet_git_repo_changes) -> str:
 @pytest.fixture
 def zet_main_path(project_path: Path = ZET_PROJECT):
     return os.path.join(project_path, "main.py")
+
+
+@pytest.fixture
+def zet_tmp_env(tmp_path) -> str:
+    tmp_env_path = os.path.join(str(tmp_path), ".local.json")
+    create_env(tmp_env_path)
+    return tmp_env_path
+
+
