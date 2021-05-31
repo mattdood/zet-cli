@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from src.zet.create import create_zet
+from src.zet.create import create_zet, bulk_import_zets
 from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE
 
 
@@ -51,3 +51,26 @@ def test_zet_metadata(zet_test_repo, zet_folders):
     assert os.path.exists(zet)
     assert "templateDate" not in text
     assert "templateTitle" not in text
+
+
+def test_bulk_create_zets(tmp_path, zet_default_repo, zet_folders):
+
+    for i in range(5):
+        folder_name = "some_folder_" + str(i)
+        file_name = "test_readme_" + str(i) + ".md"
+        d = tmp_path / folder_name
+        d.mkdir()
+        p = d / file_name
+        p.write_text("some test text")
+
+    zet_list = bulk_import_zets(tmp_path, zet_default_repo, zet_folders)
+
+    for zet in zet_list:
+        assert os.path.exists(zet["existing_path"])
+        assert os.path.exists(zet["zet_path"])
+        zet_file = open(zet["zet_path"])
+        text = ""
+        for line in zet_file:
+            text += line
+        assert "some test text" in text
+
