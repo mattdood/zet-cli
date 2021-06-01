@@ -1,6 +1,7 @@
 """Zet tool's main execution."""
 import argparse
 import sys
+import textwrap
 from typing import Optional, Sequence
 
 from .create import bulk_import_zets, create_zet
@@ -14,7 +15,16 @@ from .settings import ZET_DEFAULT_KEY, ZET_DEFAULT_TEMPLATE, ZET_DEFAULT_EDITOR,
 def main(argv: Optional[Sequence[str]] = None):
     argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser(
-        prog="zet", description="Zettlekasten command line tools"
+        prog="zet",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=textwrap.dedent("""
+            Zettlekasten command line tools
+
+            Default installation: `~/zets/`
+            Default repo: `~/zets/zets/`
+            Environment variables: `~/zets/.env/.local.json`
+        """),
+        epilog="Default installation is set for `~/zets/`."
     )
     subparsers = parser.add_subparsers(help="sub-command help")
 
@@ -77,7 +87,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "--zet_path",
         action="store",
         default="zets/",
-        help="A new zet folder path."
+        help="A new zet folder path. Defaults to the `zets/` mono-folder."
     )
     parser_add_repo.set_defaults(which="add_repo")
 
