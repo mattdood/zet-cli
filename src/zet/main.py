@@ -3,13 +3,12 @@ import argparse
 import sys
 from typing import Optional, Sequence
 
-from zet.settings import ZET_DEFAULT_KEY, ZET_DEFAULT_TEMPLATE, ZET_DEFAULT_EDITOR
-
 from .create import bulk_import_zets, create_zet
 from .editor_commands import open_editor
 from .env_setup import add_repo, get_default_env
 from .git_commands import git_add_zets, git_commit_zets, git_init_zets, git_push_zets
 from .list import list_zets
+from .settings import ZET_DEFAULT_KEY, ZET_DEFAULT_TEMPLATE, ZET_DEFAULT_EDITOR
 
 
 def main(argv: Optional[Sequence[str]] = None):
