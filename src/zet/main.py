@@ -78,6 +78,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "--zet_path",
         action="store",
         required=True,
+        default="zets/",
         help="A new zet folder path."
     )
     parser_add_repo.set_defaults(which="add_repo")
