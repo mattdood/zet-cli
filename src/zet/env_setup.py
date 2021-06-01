@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 
-from src.zet.settings import ZET_ENV_PATH, ZET_HOME
+from .settings import ZET_ENV_PATH, ZET_HOME
 
 
 def create_env(env_path: str = ZET_ENV_PATH) -> None:
@@ -43,3 +43,4 @@ def add_repo(zet_repo: str, zet_path: str, env_path: str = ZET_ENV_PATH) -> None
     repos.update(new_repo)
     config_file.seek(0)
     json.dump(config_data, config_file, indent=4)
+

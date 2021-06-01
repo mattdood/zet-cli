@@ -5,12 +5,12 @@ import shutil
 import time
 from typing import Dict, List
 
-from src.zet.settings import ZET_DEFAULT_TEMPLATE, ZET_FOLDERS
+from .settings import ZET_DEFAULT_KEY, ZET_DEFAULT_TEMPLATE, ZET_FOLDERS
 
 
 def create_zet(
     title: str,
-    zet_repo: str = ZET_FOLDERS["zets"],
+    zet_repo: str = ZET_DEFAULT_KEY,
     folder: Dict[str, str] = ZET_FOLDERS,
     template: str = ZET_DEFAULT_TEMPLATE,
 ) -> str:
@@ -39,9 +39,10 @@ def create_zet(
     full_path = os.path.join(
         folder[zet_repo], str(today.year), str(today.month), today_str
     )
-    filename = os.path.join(full_path, title)
+    full_title = str(title) + "-" + today_str + ".md"
+    filename = os.path.join(full_path, full_title)
 
-    metadata = [["templateDate", today_str], ["templateTitle", title]]
+    metadata = [["templateDate", today_str], ["templateTitle", str(title)]]
 
     if not os.path.exists(full_path):
         os.makedirs(full_path)
@@ -61,7 +62,7 @@ def create_zet(
 def bulk_import_zets(
     files_folder: str,
     zet_repo: str = ZET_FOLDERS["zets"],
-    folder: Dict[str, str] = ZET_FOLDERS
+    folder: Dict[str, str] = ZET_FOLDERS,
 ) -> List:
     """Bulk create zets from a folder.
 
@@ -78,7 +79,7 @@ def bulk_import_zets(
     Returns:
         zet_list (List): A list of dict objects
             for each of the file names, original
-            paths, and newly created paths.
+            paths, zet file paths, and newly folder paths.
     """
 
     zet_list = []
@@ -90,13 +91,16 @@ def bulk_import_zets(
                 folder[zet_repo], str(today.year), str(today.month), today_str
             )
 
+            filename = file.split(".")[0]
+            filename = filename + "-" + today_str + ".md"
+
             full_file_path = os.path.join(root, file)
-            zet_filename = os.path.join(full_path, file)
+            zet_filename = os.path.join(full_path, filename)
             zet_structure = {
                 "filename": file,
                 "existing_path": full_file_path,
                 "zet_folder_path": full_path,
-                "zet_file_path": zet_filename
+                "zet_file_path": zet_filename,
             }
             zet_list.append(zet_structure)
             time.sleep(1)
@@ -107,6 +111,3 @@ def bulk_import_zets(
             shutil.copyfile(zet["existing_path"], zet["zet_file_path"])
 
     return zet_list
-
-
-
