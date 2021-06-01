@@ -1,4 +1,3 @@
-import json
 import os
 import subprocess
 import time
@@ -20,8 +19,8 @@ from zet.env_setup import add_repo, create_env
 
 @pytest.fixture
 def zet_tmp_env(tmp_path) -> str:
-    tmp_env_path = os.path.join(str(tmp_path), ".local.json")
-    create_env(tmp_env_path)
+    tmp_env_path = os.path.join(str(tmp_path), ".env/.local.json")
+    create_env(str(tmp_path))
     add_repo("tmp", tmp_path, tmp_env_path)
     return tmp_env_path
 
@@ -114,4 +113,5 @@ def zet_repo_commit(zet_test_repo, zet_git_repo_changes) -> str:
 @pytest.fixture
 def zet_main_path(project_path: Path = ZET_PROJECT):
     return os.path.join(project_path, "main.py")
+
 
