@@ -43,7 +43,7 @@ def create_zet(
     full_title = str(clean_title) + "-" + today_str + ".md"
     filename = os.path.join(full_path, full_title)
 
-    metadata = [["templateDate", today_str], ["templateTitle", str(title)]]
+    metadata = [["templateDate", today_str], ["templateTitle", str(clean_title)]]
 
     if not os.path.exists(full_path):
         os.makedirs(full_path)
