@@ -14,14 +14,15 @@ def create_env(env_path: str = ZET_ENV_PATH) -> None:
         shutil.copyfile(example_path, env_path)
 
 
-def add_repo(zet_repo: str, zet_path: str, env_path: str = ZET_ENV_PATH) -> None:
+def add_repo(zet_repo: str, zet_path: str = "zets/", env_path: str = ZET_ENV_PATH) -> None:
     """Adds a new repo to the env file.
 
     Params:
         zet_repo (str): A zet repo name to
             append to an existing env file.
         zet_path (str): The path to a new
-            zet repo.
+            zet repo. Defaults to:
+            `~/zets/<your repo name>`.
         env_path (str): A user's `.local.json`
             environment path.
 
@@ -29,11 +30,12 @@ def add_repo(zet_repo: str, zet_path: str, env_path: str = ZET_ENV_PATH) -> None
         None
     """
 
-    zet_repo_path = os.path.join(zet_path, zet_repo)
+    clean_zet_repo = zet_repo.replace(' ', '_')
+    zet_repo_path = os.path.join(zet_path, clean_zet_repo)
     if not os.path.exists(zet_repo_path):
         os.makedirs(zet_repo_path)
 
-    new_repo = {zet_repo: zet_repo_path}
+    new_repo = {clean_zet_repo: zet_repo_path}
 
     # Loading the entire file then truncating
     # and re-writing it is pretty inefficient
