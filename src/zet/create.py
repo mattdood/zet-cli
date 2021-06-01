@@ -39,7 +39,8 @@ def create_zet(
     full_path = os.path.join(
         folder[zet_repo], str(today.year), str(today.month), today_str
     )
-    full_title = str(title) + "-" + today_str + ".md"
+    clean_title = title.replace(' ', '-')
+    full_title = str(clean_title) + "-" + today_str + ".md"
     filename = os.path.join(full_path, full_title)
 
     metadata = [["templateDate", today_str], ["templateTitle", str(title)]]
