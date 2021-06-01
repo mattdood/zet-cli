@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+from typing import Dict
 
 ZET_PROJECT = Path(__file__)
 ZET_HOME = ZET_PROJECT.parents[2]
@@ -24,3 +25,9 @@ config = open(ZET_ENV_PATH, "r")
 ZET_FOLDERS = json.load(config)["zet_repos"]
 config.close()
 
+def get_default_env(
+    zet_default_repo: str = ZET_DEFAULT_KEY,
+    folders: Dict[str, str] = ZET_FOLDERS
+) -> str:
+    """Returns the default zet path."""
+    return os.path.join(folders[zet_default_repo])

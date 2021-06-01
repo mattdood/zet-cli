@@ -1,9 +1,8 @@
 import json
 import os
 import shutil
-from typing import Dict
 
-from .settings import ZET_DEFAULT_KEY, ZET_ENV_PATH, ZET_FOLDERS, ZET_HOME
+from .settings import ZET_ENV_PATH, ZET_HOME
 
 
 def create_env(env_path: str = ZET_ENV_PATH) -> None:
@@ -48,10 +47,4 @@ def add_repo(zet_repo: str, zet_path: str = "zets/", env_path: str = ZET_ENV_PAT
     json.dump(config_data, config_file, indent=4)
 
 
-def get_default_env(
-    zet_default_repo: str = ZET_DEFAULT_KEY,
-    folders: Dict[str, str] = ZET_FOLDERS
-) -> str:
-    """Returns the default zet path."""
-    return os.path.join(folders[zet_default_repo])
 
