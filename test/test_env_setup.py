@@ -5,7 +5,7 @@ from src.zet.env_setup import add_repo, create_env
 
 
 def test_env_creates(tmp_path):
-    tmp_env_path = os.path.join(str(tmp_path), ".local.json")
+    tmp_env_path = os.path.join(str(tmp_path), ".env/.local.json")
     create_env(tmp_env_path)
     assert os.path.exists(tmp_env_path)
 
@@ -18,4 +18,4 @@ def test_add_repo(zet_tmp_env, tmp_path):
 
     with open(zet_tmp_env, "r") as file:
         zet_env = json.load(file)["zet_repos"]
-        assert {zet_repo: zet_path} == zet_env
+        assert zet_path == zet_env["some_repo"]
