@@ -24,7 +24,6 @@ def main(argv: Optional[Sequence[str]] = None):
             Default repo: `~/zets/zets/`
             Environment variables: `~/zets/.env/.local.json`
         """),
-        epilog="Default installation is set for `~/zets/`."
     )
     subparsers = parser.add_subparsers(help="sub-command help")
 
