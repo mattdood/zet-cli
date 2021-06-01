@@ -2,15 +2,18 @@ import json
 import os
 import shutil
 
-from .settings import ZET_ENV_PATH, ZET_HOME
+from .settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_KEY, ZET_ENV_PATH, ZET_HOME
 
 
-def create_env(env_path: str = ZET_ENV_PATH) -> None:
+def create_env(env_path: str = ZET_DEFAULT_FOLDER[ZET_DEFAULT_KEY]) -> None:
     """Creates a zet env file."""
     example_path = os.path.join(ZET_HOME, ".env/.example.json")
+    local_path = os.path.join(env_path, ".env/.local.json")
+    env_folders = os.path.join(env_path, ".env")
 
-    if not os.path.exists(env_path):
-        shutil.copyfile(example_path, env_path)
+    if not os.path.exists(local_path):
+        os.makedirs(env_folders)
+        shutil.copyfile(example_path, local_path)
 
 
 def add_repo(zet_repo: str, zet_path: str = "zets/", env_path: str = ZET_ENV_PATH) -> None:

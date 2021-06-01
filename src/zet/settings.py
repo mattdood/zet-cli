@@ -6,11 +6,11 @@ from typing import Dict
 ZET_PROJECT = Path(__file__)
 ZET_HOME = ZET_PROJECT.parents[2]
 
-ZET_ENV_PATH = os.path.join(ZET_HOME, ".env/.local.json")
 
 # Default directory for sets
 ZET_DEFAULT_KEY = "zets"
 ZET_DEFAULT_FOLDER = {ZET_DEFAULT_KEY: "zets/"}
+ZET_ENV_PATH = os.path.join(ZET_DEFAULT_FOLDER[ZET_DEFAULT_KEY], ".env/.local.json")
 ZET_DEFAULT_EDITOR = {"editor": "vim", "command": "vim"}
 ZET_DEFAULT_TEMPLATE = os.path.join(ZET_HOME, "src/zet", "templates/readme.md")
 
@@ -24,6 +24,7 @@ if not os.path.exists(ZET_ENV_PATH):
 config = open(ZET_ENV_PATH, "r")
 ZET_FOLDERS = json.load(config)["zet_repos"]
 config.close()
+
 
 def get_default_env(
     zet_default_repo: str = ZET_DEFAULT_KEY,
