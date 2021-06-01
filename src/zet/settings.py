@@ -9,7 +9,7 @@ ZET_ENV_PATH = os.path.join(ZET_HOME, ".env/.local.json")
 
 # Default directory for sets
 ZET_DEFAULT_KEY = "zets"
-ZET_DEFAULT_FOLDER = {ZET_DEFAULT_KEY: "~/zets/"}
+ZET_DEFAULT_FOLDER = {ZET_DEFAULT_KEY: "zets/"}
 ZET_DEFAULT_EDITOR = {"editor": "vim", "command": "vim"}
 ZET_DEFAULT_TEMPLATE = os.path.join(ZET_HOME, "src/zet", "templates/readme.md")
 
@@ -24,4 +24,3 @@ config = open(ZET_ENV_PATH, "r")
 ZET_FOLDERS = json.load(config)["zet_repos"]
 config.close()
 
-print(ZET_FOLDERS)
