@@ -112,6 +112,7 @@ celerybeat.pid
 # Environments
 # .env
 .env/.local.json
+zets/
 .venv/
 env/
 venv/
