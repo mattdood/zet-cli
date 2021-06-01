@@ -45,6 +45,25 @@ def main(argv: Optional[Sequence[str]] = None):
     parser_create.set_defaults(which="create")
 
 
+    parser_bulk = subparsers.add_parser("bulk", help="Bulk imports zets from a folder.")
+    parser_bulk.add_argument(
+        "-f",
+        "--files_folder",
+        action="store",
+        type=str,
+        required=True,
+        help="A folder of files to copy."
+    )
+    parser_bulk.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=ZET_DEFAULT_KEY,
+        help="A zet repo folder name. Defaults to ZET_DEFAULT_FOLDER.",
+    )
+    parser_bulk.set_defaults(which="bulk")
+
+
     parser_add_repo = subparsers.add_parser("add_repo", help="Creates a zet repo.")
     parser_add_repo.add_argument(
         "-r",
@@ -131,9 +150,29 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
+        default=ZET_DEFAULT_KEY,
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_push.set_defaults(which="push")
+
+
+    parser_open_editor = subparsers.add_parser("editor", help="Open the editor to a repo.")
+    parser_open_editor.add_argument(
+        "-p",
+        "--path",
+        action="store",
+        default=get_default_env(),
+        help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
+    )
+    parser_open_editor.add_argument(
+        "-e",
+        "--editor",
+        action="store",
+        default=ZET_DEFAULT_EDITOR,
+        help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
+    )
+    parser_open_editor.set_defaults(which="editor")
+
 
     if len(argv) == 0:
         argv = ["help"]
@@ -142,7 +181,10 @@ def main(argv: Optional[Sequence[str]] = None):
     print(type(args))
 
     if args.which == "create":
-        create_zet(title=args.title, zet_repo=args.zet_repo, template=args.template)
+        zet_path = create_zet(title=args.title, zet_repo=args.zet_repo, template=args.template)
+        open_editor(path=zet_path)
+    elif args.which == "bulk":
+        bulk_import_zets(files_folder=args.files_folder, zet_repo=args.zet_repo)
     elif args.which == "add_repo":
         add_repo(zet_repo=args.zet_repo, zet_path=args.zet_path)
     elif args.which == "list":
@@ -155,6 +197,8 @@ def main(argv: Optional[Sequence[str]] = None):
         git_commit_zets(message=args.message, zet_repo=args.zet_repo)
     elif args.which == "push":
         git_push_zets(zet_repo=args.zet_repo)
+    elif args.which == "editor":
+        open_editor(path=args.path, editor=args.editor)
     else:
         print("Unknown command: ", args)
 
