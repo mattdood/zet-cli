@@ -61,7 +61,7 @@ def create_zet(
 
 def bulk_import_zets(
     files_folder: str,
-    zet_repo: str = ZET_FOLDERS["zets"],
+    zet_repo: str = ZET_DEFAULT_KEY,
     folder: Dict[str, str] = ZET_FOLDERS,
 ) -> List:
     """Bulk create zets from a folder.
