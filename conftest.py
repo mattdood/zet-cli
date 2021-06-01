@@ -1,5 +1,5 @@
+import json
 import os
-import random
 import subprocess
 import time
 from pathlib import Path
@@ -11,25 +11,19 @@ from src.zet.create import create_zet
 from src.zet.git_commands import git_add_zets, git_commit_zets, git_init_zets
 from src.zet.list import list_zets
 from src.zet.settings import (
-    ZET_DEFAULT_FOLDER,
     ZET_DEFAULT_TEMPLATE,
     ZET_FOLDERS,
     ZET_PROJECT,
 )
-from zet.env_setup import create_env
+from zet.env_setup import add_repo, create_env
 
 
 @pytest.fixture
-def zet(
-    folder: Dict[str, str] = ZET_FOLDERS, template: str = ZET_DEFAULT_TEMPLATE
-) -> str:
-    sample_zet = create_zet("some title", folder["zet"], template)
-    return sample_zet
-
-
-@pytest.fixture
-def zet_default_repo(folder: Dict[str, str] = ZET_DEFAULT_FOLDER):
-    return list(folder.keys())[0]
+def zet_tmp_env(tmp_path) -> str:
+    tmp_env_path = os.path.join(str(tmp_path), ".local.json")
+    create_env(tmp_env_path)
+    add_repo("tmp", tmp_path, tmp_env_path)
+    return tmp_env_path
 
 
 @pytest.fixture
@@ -45,13 +39,17 @@ def zet_folders(
 
 @pytest.fixture
 def zet_test_repo(zet_folders) -> str:
-    return list(zet_folders.keys())[1]
+    return list(zet_folders.keys())[-1]
 
 
 @pytest.fixture
-def zet_random_repo_name(zet_folders) -> str:
-    random_index = random.randint(0, len(zet_folders) - 1)
-    return list(zet_folders.keys())[random_index]
+def zet(
+    zet_test_repo,
+    zet_folders,
+    template: str = ZET_DEFAULT_TEMPLATE
+) -> str:
+    sample_zet = create_zet("some title", zet_test_repo, zet_folders, template)
+    return sample_zet
 
 
 @pytest.fixture
@@ -117,9 +115,3 @@ def zet_repo_commit(zet_test_repo, zet_git_repo_changes) -> str:
 def zet_main_path(project_path: Path = ZET_PROJECT):
     return os.path.join(project_path, "main.py")
 
-
-@pytest.fixture
-def zet_tmp_env(tmp_path) -> str:
-    tmp_env_path = os.path.join(str(tmp_path), ".local.json")
-    create_env(tmp_env_path)
-    return tmp_env_path
