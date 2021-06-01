@@ -26,7 +26,7 @@ def test_git_commit_zets(zet_test_repo, zet_git_repo_changes):
     git_commit = git_commit_zets("some message", zet_test_repo, zet_git_repo_changes)
     print("after commit")
     assert "some message" in str(git_commit)
-    assert "files changed" in str(git_commit)
+    assert "files changed" in str(git_commit) or "file changed" in str(git_commit)
 
 
 @pytest.mark.skip(reason="No way of testing, fails on git_push, pre-assertion")
