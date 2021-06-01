@@ -4,31 +4,10 @@ import time
 import pytest
 
 from src.zet.create import bulk_import_zets, create_zet
-from src.zet.settings import ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE
 
 
 def test_zet_exists(zet_test_repo, zet_folders):
     zet = create_zet("some title", zet_test_repo, zet_folders)
-    assert os.path.exists(zet)
-
-
-@pytest.mark.parametrize(
-    "title, zet_repo, folder, template",
-    [
-        ("some title", "zets", ZET_DEFAULT_FOLDER, ZET_DEFAULT_TEMPLATE),
-        ("some title", "zets", ZET_DEFAULT_FOLDER, None),
-    ],
-)
-def test_zet_arguments(title, zet_repo, folder, template, tmp_path):
-    # Pytest does not support passing fixtures as params
-    if template is None:
-        template_dir = tmp_path / "template"
-        template_dir.mkdir()
-        template_file = template_dir / "some_template.md"
-        template_file.write_text("# Some Alternate Content")
-        template = template_file.absolute()
-
-    zet = create_zet(title, zet_repo, folder, template)
     assert os.path.exists(zet)
 
 
@@ -53,7 +32,7 @@ def test_zet_metadata(zet_test_repo, zet_folders):
     assert "templateTitle" not in text
 
 
-def test_bulk_create_zets(tmp_path, zet_default_repo, zet_folders):
+def test_bulk_create_zets(tmp_path, zet_test_repo, zet_folders):
 
     for i in range(5):
         folder_name = "some_folder_" + str(i)
@@ -63,11 +42,12 @@ def test_bulk_create_zets(tmp_path, zet_default_repo, zet_folders):
         p = d / file_name
         p.write_text("some test text")
 
-    zet_list = bulk_import_zets(tmp_path, zet_default_repo, zet_folders)
+    zet_list = bulk_import_zets(tmp_path, zet_test_repo, zet_folders)
 
     for zet in zet_list:
         assert os.path.exists(zet["existing_path"])
         assert os.path.exists(zet["zet_file_path"])
+        print(zet["zet_file_path"])
         zet_file = open(zet["zet_file_path"])
         text = ""
         for line in zet_file:
