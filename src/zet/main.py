@@ -37,6 +37,22 @@ def main(argv: Optional[Sequence[str]] = None):
         help="A zet title."
     )
     parser_create.add_argument(
+        "-c",
+        "--category",
+        action="store",
+        type=str,
+        required=True,
+        help="A zet category."
+    )
+    parser_create.add_argument(
+        "-tag",
+        "--tags",
+        action="store",
+        type=str,
+        required=True,
+        help="A set of zet tags. Format is `str` but will be parsed from a comma separated list. Ex: `tag, tag, tag`."
+    )
+    parser_create.add_argument(
         "-r",
         "--zet_repo",
         action="store",
@@ -189,7 +205,13 @@ def main(argv: Optional[Sequence[str]] = None):
     print(type(args))
 
     if args.which == "create":
-        zet_path = create_zet(title=args.title, zet_repo=args.zet_repo, template=args.template)
+        zet_path = create_zet(
+            title=args.title,
+            category=args.category,
+            tags=args.tags,
+            zet_repo=args.zet_repo,
+            template=args.template
+        )
         open_editor(path=zet_path)
     elif args.which == "bulk":
         bulk_import_zets(files_folder=args.files_folder, zet_repo=args.zet_repo)
