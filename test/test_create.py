@@ -7,15 +7,33 @@ from src.zet.create import bulk_import_zets, create_zet
 
 
 def test_zet_exists(zet_test_repo, zet_folders):
-    zet = create_zet("some title", zet_test_repo, zet_folders)
+    zet = create_zet(
+        "some title",
+        "some category",
+        "some, tags",
+        zet_test_repo,
+        zet_folders
+    )
     assert os.path.exists(zet)
 
 
 def test_unique_zets(zet_test_repo, zet_folders):
 
-    zet_one = create_zet("some title", zet_test_repo, zet_folders)
+    zet_one = create_zet(
+        "some title",
+        "some category",
+        "some, tags",
+        zet_test_repo,
+        zet_folders
+    )
     time.sleep(1)
-    zet_two = create_zet("some title", zet_test_repo, zet_folders)
+    zet_two = create_zet(
+        "some title",
+        "some category",
+        "some, tags",
+        zet_test_repo,
+        zet_folders
+    )
     assert zet_one != zet_two
     assert os.path.exists(zet_one)
     assert os.path.exists(zet_two)
@@ -30,6 +48,9 @@ def test_zet_metadata(zet_test_repo, zet_folders):
     assert os.path.exists(zet)
     assert "templateDate" not in text
     assert "templateTitle" not in text
+    assert "templateCategory" not in text
+    assert "templateCleanTitle" not in text
+    assert "templateTags" not in text
 
 
 def test_bulk_create_zets(tmp_path, zet_test_repo, zet_folders):

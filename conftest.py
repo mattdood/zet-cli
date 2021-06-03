@@ -47,7 +47,14 @@ def zet(
     zet_folders,
     template: str = ZET_DEFAULT_TEMPLATE
 ) -> str:
-    sample_zet = create_zet("some title", zet_test_repo, zet_folders, template)
+    sample_zet = create_zet(
+        "some title",
+        "some category",
+        "some, tags",
+        zet_test_repo,
+        zet_folders,
+        template
+    )
     return sample_zet
 
 
@@ -61,7 +68,14 @@ def zet_list(
 
     for i in range(zet_count):
         time.sleep(1)
-        create_zet("some title", zet_test_repo, zet_folders, template)
+        create_zet(
+            "some title",
+            "some category",
+            "some, tags",
+            zet_test_repo,
+            zet_folders,
+            template
+        )
     sample_zets = list_zets(zet_test_repo, zet_folders)
 
     return sample_zets
@@ -78,7 +92,14 @@ def zet_list_paths(
 
     for i in range(zet_count):
         time.sleep(1)
-        create_zet("some title", zet_test_repo, zet_folders, template)
+        create_zet(
+            "some title",
+            "some category",
+            "some, tags",
+            zet_test_repo,
+            zet_folders,
+            template
+        )
     sample_zets = list_zets(zet_test_repo, zet_folders, full_path)
 
     return sample_zets
