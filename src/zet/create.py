@@ -10,6 +10,8 @@ from .settings import ZET_DEFAULT_KEY, ZET_DEFAULT_TEMPLATE, ZET_FOLDERS
 
 def create_zet(
     title: str,
+    category: str,
+    tags: str,
     zet_repo: str = ZET_DEFAULT_KEY,
     folder: Dict[str, str] = ZET_FOLDERS,
     template: str = ZET_DEFAULT_TEMPLATE,
@@ -43,7 +45,13 @@ def create_zet(
     full_title = str(clean_title) + "-" + today_str + ".md"
     filename = os.path.join(full_path, full_title)
 
-    metadata = [["templateDate", today_str], ["templateTitle", str(clean_title)]]
+    metadata = [
+        ["templateDate", today_str],
+        ["templateTitle", str(title)],
+        ["templateCleanTitle", str(clean_title)],
+        ["templateCategory", str(category)],
+        ["templateTags", str(tags)]
+    ]
 
     if not os.path.exists(full_path):
         os.makedirs(full_path)
