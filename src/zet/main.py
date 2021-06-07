@@ -7,7 +7,13 @@ from typing import Optional, Sequence
 from .create import bulk_import_zets, create_zet
 from .editor_commands import open_editor
 from .env_setup import add_repo
-from .git_commands import git_add_zets, git_commit_zets, git_init_zets, git_push_zets
+from .git_commands import (
+    git_add_zets,
+    git_commit_zets,
+    git_init_zets,
+    git_pull_zets,
+    git_push_zets
+)
 from .list import list_zets
 from .settings import ZET_DEFAULT_KEY, ZET_DEFAULT_TEMPLATE, ZET_DEFAULT_EDITOR, get_default_env
 
@@ -180,6 +186,10 @@ def main(argv: Optional[Sequence[str]] = None):
     parser_git_push.set_defaults(which="push")
 
 
+    parser_git_pull = subparsers.add_parser("pull", help="Git pull all zet repos from settings.")
+    parser_git_pull.set_defaults(which="pull")
+
+
     parser_open_editor = subparsers.add_parser("editor", help="Open the editor to a repo.")
     parser_open_editor.add_argument(
         "-p",
@@ -227,6 +237,8 @@ def main(argv: Optional[Sequence[str]] = None):
         git_commit_zets(message=args.message, zet_repo=args.zet_repo)
     elif args.which == "push":
         git_push_zets(zet_repo=args.zet_repo)
+    elif args.which == "pull":
+        git_pull_zets()
     elif args.which == "editor":
         open_editor(path=args.path, editor=args.editor)
     else:
