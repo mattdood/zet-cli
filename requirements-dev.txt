@@ -2,6 +2,7 @@
 
 -r requirements.txt
 
+coverage
 keyboard
 pre-commit
 pytest
