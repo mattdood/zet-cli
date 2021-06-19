@@ -36,17 +36,21 @@ def create_zet(
             created zet.
     """
     today = datetime.datetime.now()
+    today_year = str(today.year)
+    today_month = str(today.month)
     today_str = str(today.strftime("%Y%m%d%H%M%S"))
 
     full_path = os.path.join(
-        folder[zet_repo], str(today.year), str(today.month), today_str
+        folder[zet_repo], today_year, today_month, today_str
     )
-    clean_title = title.replace(' ', '-')
+    clean_title = title.lower().replace(' ', '-')
     full_title = str(clean_title) + "-" + today_str + ".md"
     filename = os.path.join(full_path, full_title)
     tags_list = tags.split(', ')
+    template_path = "/" + os.path.join(today_year, today_month, clean_title, today_str)
 
     metadata = [
+        ["templatePath", template_path],
         ["templateDate", today_str],
         ["templateTitle", str(title)],
         ["templateCleanTitle", str(clean_title)],

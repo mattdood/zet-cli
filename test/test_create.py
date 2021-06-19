@@ -52,6 +52,7 @@ def test_zet_metadata(zet_test_repo, zet_folders):
     for line in zet_file:
         text += line
     assert os.path.exists(zet)
+    assert "templatePath" not in text
     assert "templateDate" not in text
     assert "templateTitle" not in text
     assert "templateCategory" not in text
