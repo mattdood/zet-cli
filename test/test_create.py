@@ -40,7 +40,13 @@ def test_unique_zets(zet_test_repo, zet_folders):
 
 
 def test_zet_metadata(zet_test_repo, zet_folders):
-    zet = create_zet("some title", zet_test_repo, zet_folders)
+    zet = create_zet(
+        "some title",
+        "some category",
+        "some, tags",
+        zet_test_repo,
+        zet_folders
+    )
     zet_file = open(zet)
     text = ""
     for line in zet_file:

@@ -44,13 +44,14 @@ def create_zet(
     clean_title = title.replace(' ', '-')
     full_title = str(clean_title) + "-" + today_str + ".md"
     filename = os.path.join(full_path, full_title)
+    tags_list = tags.split(', ')
 
     metadata = [
         ["templateDate", today_str],
         ["templateTitle", str(title)],
         ["templateCleanTitle", str(clean_title)],
         ["templateCategory", str(category)],
-        ["templateTags", str(tags)]
+        ["templateTags", str(tags_list)]
     ]
 
     if not os.path.exists(full_path):

@@ -1,5 +1,8 @@
-|  Title | Category  | Tags  | Date |
-| ------------ | ------------ | ------------ | ----|
-| templateCleanTitle | templateCategory  | templateTags  | templateDate |
+---
+title: 'templateTitle'
+date: 'templateDate'
+category: 'templateCategory'
+tags: templateTags
+---
 
 # templateTitle
