@@ -47,7 +47,7 @@ def create_zet(
     full_title = str(clean_title) + "-" + today_str + ".md"
     filename = os.path.join(full_path, full_title)
     tags_list = tags.split(', ')
-    template_path = "/" + os.path.join(today_year, today_month, clean_title, today_str)
+    template_path = "/" + os.path.join(today_year, today_month, clean_title + "-" + today_str)
 
     metadata = [
         ["templatePath", template_path],
