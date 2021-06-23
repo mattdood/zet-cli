@@ -11,7 +11,7 @@ ZET_HOME = ZET_PROJECT.parents[2]
 ZET_DEFAULT_KEY = "zets"
 ZET_DEFAULT_FOLDER = {ZET_DEFAULT_KEY: "zets/"}
 ZET_ENV_PATH = os.path.join(ZET_DEFAULT_FOLDER[ZET_DEFAULT_KEY], ".env/.local.json")
-ZET_DEFAULT_EDITOR = {"editor": "vim", "command": "vim"}
+ZET_DEFAULT_EDITOR = {"editor": "vim", "command": "nvim"}
 ZET_DEFAULT_TEMPLATE = os.path.join(ZET_HOME, "src/zet", "templates/readme.md")
 
 if not os.path.exists(ZET_ENV_PATH):
