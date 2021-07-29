@@ -15,7 +15,7 @@ from .git_commands import (
     git_push_zets
 )
 from .list import list_zets
-from .settings import ZET_DEFAULT_KEY, ZET_DEFAULT_TEMPLATE, ZET_DEFAULT_EDITOR, get_default_env
+from .settings import ZET_DEFAULT_TEMPLATE, ZET_DEFAULT_EDITOR, ZET_DEFAULT_REPO
 
 
 def main(argv: Optional[Sequence[str]] = None):
@@ -62,7 +62,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder name. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_create.add_argument(
@@ -88,7 +88,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder name. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_bulk.set_defaults(which="bulk")
@@ -100,7 +100,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "--zet_repo",
         action="store",
         required=True,
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo title."
     )
     parser_add_repo.add_argument(
@@ -118,7 +118,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_list.add_argument(
@@ -136,7 +136,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_init.set_defaults(which="init")
@@ -149,7 +149,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_add.set_defaults(which="add")
@@ -169,7 +169,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_commit.set_defaults(which="commit")
@@ -180,7 +180,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_KEY,
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_push.set_defaults(which="push")
