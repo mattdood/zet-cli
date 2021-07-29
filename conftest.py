@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -10,30 +11,15 @@ from src.zet.create import create_zet
 from src.zet.git_commands import git_add_zets, git_commit_zets, git_init_zets
 from src.zet.list import list_zets
 from src.zet.settings import (
-    ZET_DEFAULT_TEMPLATE,
-    ZET_FOLDERS,
-    ZET_PROJECT,
+    Settings,
+    ZET_LOCAL_ENV_PATH
 )
-from zet.env_setup import add_repo, create_env
+from zet.env_setup import add_repo, generate_env
 
 
-@pytest.fixture
-def zet_tmp_env(tmp_path) -> str:
-    tmp_env_path = os.path.join(str(tmp_path), ".env/.local.json")
-    create_env(str(tmp_path))
-    add_repo("tmp", tmp_path, tmp_env_path)
-    return tmp_env_path
-
-
-@pytest.fixture
-def zet_folders(
-    tmp_path,
-    folder: Dict[str, str] = ZET_FOLDERS,
-) -> Dict[str, str]:
-    d = tmp_path / "some_folder"
-    d.mkdir()
-    folder["some_folder"] = str(d)
-    return folder
+@pytest.fixture()
+def zet_settings():
+    generate_env()
 
 
 @pytest.fixture
@@ -121,18 +107,17 @@ def zet_git_repo_changes(zet_test_repo, zet_git_repo) -> str:
     new_file = open(new_file_path, "w")
     new_file.writelines(["some text", "some other text"])
     new_file.close()
-    git_add_zets(zet_test_repo, zet_git_repo)
-    return zet_git_repo
+    git_add_zets(zet_test_repo)
 
 
-@pytest.fixture
-def zet_repo_commit(zet_test_repo, zet_git_repo_changes) -> str:
-    git_commit_zets("some message", zet_test_repo, zet_git_repo_changes)
-    return zet_git_repo_changes
-
-
-@pytest.fixture
-def zet_main_path(project_path: Path = ZET_PROJECT):
-    return os.path.join(project_path, "main.py")
-
+@pytest.fixture(autouse=True)
+def cleanup_run():
+    """Removes workspaces on teardown."""
+    yield
+    default_workspace = "zets/"
+    other_workspace = "other/"
+    if os.path.exists(default_workspace):
+        shutil.rmtree(default_workspace)
+    if os.path.exists(other_workspace):
+        shutil.rmtree(other_workspace)
 
