@@ -23,8 +23,10 @@ def zet_settings():
 
 
 @pytest.fixture
-def zet_test_repo(zet_folders) -> str:
-    return list(zet_folders.keys())[-1]
+def zet_test_repo(zet_settings) -> str:
+    repo_name = "test_repo"
+    add_repo(repo_name)
+    return repo_name
 
 
 @pytest.fixture
@@ -92,18 +94,18 @@ def zet_list_paths(
 
 
 @pytest.fixture
-def zet_git_repo(zet_test_repo, zet_folders) -> Dict[str, str]:
+def zet_git_repo(zet_test_repo):
     try:
-        git_init_zets(zet_test_repo, zet_folders)
+        git_init_zets(zet_test_repo)
     except subprocess.CalledProcessError as error:
         error_dict = {"response_code": error.returncode, "output": error.output}
         return error_dict
-    return zet_folders
 
 
 @pytest.fixture
 def zet_git_repo_changes(zet_test_repo, zet_git_repo) -> str:
-    new_file_path = os.path.join(zet_git_repo[zet_test_repo], "some_file.md")
+    repo_path = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")[zet_test_repo]
+    new_file_path = os.path.join(repo_path["folder"], "some_file.md")
     new_file = open(new_file_path, "w")
     new_file.writelines(["some text", "some other text"])
     new_file.close()
