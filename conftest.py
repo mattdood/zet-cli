@@ -2,8 +2,7 @@ import os
 import shutil
 import subprocess
 import time
-from pathlib import Path
-from typing import Dict, List
+from typing import List
 
 import pytest
 
@@ -32,63 +31,48 @@ def zet_test_repo(zet_settings) -> str:
 @pytest.fixture
 def zet(
     zet_test_repo,
-    zet_folders,
-    template: str = ZET_DEFAULT_TEMPLATE
 ) -> str:
     sample_zet = create_zet(
         "some title",
         "some category",
         "some, tags",
-        zet_test_repo,
-        zet_folders,
-        template
+        zet_test_repo
     )
     return sample_zet
 
 
 @pytest.fixture
 def zet_list(
-    zet_test_repo,
-    zet_folders,
-    zet_count: int = 5,
-    template: str = ZET_DEFAULT_TEMPLATE,
+    zet_test_repo
 ) -> List[str]:
 
-    for i in range(zet_count):
+    for i in range(5):
         time.sleep(1)
         create_zet(
             "some title",
             "some category",
             "some, tags",
-            zet_test_repo,
-            zet_folders,
-            template
+            zet_test_repo
         )
-    sample_zets = list_zets(zet_test_repo, zet_folders)
+    sample_zets = list_zets(zet_test_repo)
 
     return sample_zets
 
 
 @pytest.fixture
 def zet_list_paths(
-    zet_test_repo,
-    zet_folders,
-    zet_count: int = 5,
-    full_path: bool = True,
-    template: str = ZET_DEFAULT_TEMPLATE,
+    zet_test_repo
 ) -> List[str]:
 
-    for i in range(zet_count):
+    for i in range(5):
         time.sleep(1)
         create_zet(
             "some title",
             "some category",
             "some, tags",
-            zet_test_repo,
-            zet_folders,
-            template
+            zet_test_repo
         )
-    sample_zets = list_zets(zet_test_repo, zet_folders, full_path)
+    sample_zets = list_zets(zet_test_repo, True)
 
     return sample_zets
 

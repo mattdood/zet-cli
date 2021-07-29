@@ -1,12 +1,12 @@
 import os
 from typing import Dict, List
 
-from .settings import ZET_DEFAULT_FOLDER, ZET_FOLDERS
+from .settings import Settings
+from .settings import ZET_DEFAULT_REPO, ZET_LOCAL_ENV_PATH
 
 
 def list_zets(
-    zet_repo: str = ZET_DEFAULT_FOLDER["zets"],
-    folder: Dict[str, str] = ZET_FOLDERS,
+    zet_repo: str = ZET_DEFAULT_REPO,
     full_path: bool = False,
 ) -> List[str]:
     """Lists zets.
@@ -22,14 +22,17 @@ def list_zets(
     Returns:
         zets (List[str]): List of zets.
     """
+
+    repo = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")[zet_repo]["folder"]
+
     zet_list = []
     if full_path:
-        for root, dirs, files in os.walk(folder[zet_repo]):
+        for root, dirs, files in os.walk(repo):
             for file in files:
                 full_file_path = os.path.join(root, file)
                 zet_list.append(full_file_path)
     else:
-        for root, dirs, files in os.walk(folder[zet_repo]):
+        for root, dirs, files in os.walk(repo):
             for file in files:
                 zet_list.append(file)
 
