@@ -1,5 +1,21 @@
 {
+    "defaults": {
+        "repo": "zets",
+        "template": "default",
+        "editor": {
+            "name": "vim",
+            "command": "nvim"
+        }
+    },
+    "templates": {
+        "default": {
+            "location": ""
+        }
+    },
     "zet_repos": {
-
+        "zets": {
+            "folder": "zets/",
+            "template": "default"
+        }
     }
 }
