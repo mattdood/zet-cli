@@ -1,21 +1,57 @@
 import json
 import os
 
-from src.zet.env_setup import add_repo, create_env
+from src.zet.settings import ZET_INSTALL_PATH, ZET_LOCAL_ENV_PATH
+from src.zet.env_setup import add_repo, generate_env
 
 
-def test_env_creates(tmp_path):
-    tmp_env_path = os.path.join(str(tmp_path), ".env/.local.json")
-    create_env(tmp_env_path)
-    assert os.path.exists(tmp_env_path)
+def test_env_generates(cleanup_run):
+    """Creates local settings.
+
+    We have to cleanup any other test
+    settings that may exist prior to
+    running this.
+    """
+    generate_env()
+    assert os.path.exists("zets/.env/.local.json")
 
 
-def test_add_repo(zet_tmp_env, tmp_path):
+def test_add_repo(zet_settings):
+    """Tests both default and non-default repos.
+
+    Default:
+        Repos are placed in the "zets/" home
+        directory defined in settings.
+    Non-Default:
+        Repos are placed in a user-defined directory
+        outside of the predefined area.
+    """
     zet_repo = "some_repo"
-    zet_path = os.path.join(tmp_path, zet_repo)
-    add_repo(zet_repo, str(tmp_path), zet_tmp_env)
-    assert os.path.exists(zet_path)
+    zet_path = os.path.join(ZET_INSTALL_PATH, zet_repo)
+    zet_other = "other/"
+    zet_other_repo = "some_other_repo"
+    zet_other_path = os.path.join(zet_other, zet_other_repo)
 
-    with open(zet_tmp_env, "r") as file:
+    add_repo(zet_repo)
+    add_repo(zet_other_repo, zet_other)
+    assert os.path.exists(zet_path)
+    assert os.path.exists(zet_other_path)
+
+    zet_repo_setting = {
+        zet_repo: {
+            "folder": zet_path,
+            "template": "default"
+        }
+    }
+    zet_other_repo_setting = {
+        zet_other_repo: {
+            "folder": zet_other_path,
+            "template": "default"
+        }
+    }
+
+    with open(ZET_LOCAL_ENV_PATH, "r") as file:
         zet_env = json.load(file)["zet_repos"]
-        assert zet_path == zet_env["some_repo"]
+        assert zet_repo_setting[zet_repo] == zet_env[zet_repo]
+        assert zet_other_repo_setting[zet_other_repo] == zet_env[zet_other_repo]
+
