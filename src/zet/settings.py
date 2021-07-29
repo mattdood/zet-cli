@@ -3,32 +3,50 @@ import os
 from pathlib import Path
 from typing import Dict
 
+
 ZET_PROJECT = Path(__file__)
 ZET_HOME = ZET_PROJECT.parents[2]
+ZET_INSTALL_PATH = "zets/"
+ZET_LOCAL_ENV_FOLDER = ZET_INSTALL_PATH + ".env/"
+ZET_LOCAL_ENV_PATH = ZET_LOCAL_ENV_FOLDER + ".local.json"
 
-
-# Default directory for sets
-ZET_DEFAULT_KEY = "zets"
-ZET_DEFAULT_FOLDER = {ZET_DEFAULT_KEY: "zets/"}
-ZET_ENV_PATH = os.path.join(ZET_DEFAULT_FOLDER[ZET_DEFAULT_KEY], ".env/.local.json")
 ZET_DEFAULT_EDITOR = {"editor": "vim", "command": "nvim"}
 ZET_DEFAULT_TEMPLATE = os.path.join(ZET_HOME, "src/zet", "templates/readme.md")
 
-if not os.path.exists(ZET_ENV_PATH):
-    from .env_setup import add_repo, create_env
 
-    create_env()
-    default_key = list(ZET_DEFAULT_FOLDER.keys())[0]
-    add_repo(default_key, ZET_DEFAULT_FOLDER[default_key])
+class Settings:
 
-config = open(ZET_ENV_PATH, "r")
-ZET_FOLDERS = json.load(config)["zet_repos"]
-config.close()
+    def __init__(self, path: str):
+        self.path = path
+        self.data = self.load_settings(self.path)
+
+    @staticmethod
+    def load_settings(path: str) -> Dict:
+        with open(path, "r") as file:
+            data = json.load(file)
+        return data
+
+    def get_setting(self, key: str):
+        return self.data[key]
+
+    def update_setting(self, key: str, value) -> None:
+        settings_file = open(self.path, "r+")
+        data = json.load(settings_file)
+        data[key].update(value)
+        settings_file.seek(0)
+        json.dump(data, settings_file, indent=4)
+        settings_file.close()
 
 
-def get_default_env(
-    zet_default_repo: str = ZET_DEFAULT_KEY,
-    folders: Dict[str, str] = ZET_FOLDERS
-) -> str:
-    """Returns the default zet path."""
-    return os.path.join(folders[zet_default_repo])
+if not os.path.exists(ZET_LOCAL_ENV_PATH):
+    from src.zet.env_setup import generate_env
+    generate_env()
+
+local_settings = Settings(ZET_LOCAL_ENV_PATH)
+ZET_DEFAULTS = local_settings.get_setting("defaults")
+ZET_REPOS = local_settings.get_setting("zet_repos")
+ZET_TEMPLATES = local_settings.get_setting("templates")
+
+ZET_DEFAULT_REPO = "zets"
+ZET_DEFAULT_FOLDER = {ZET_DEFAULT_REPO: "zets/"}
+
