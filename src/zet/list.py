@@ -1,8 +1,7 @@
 import os
 from typing import Dict, List
 
-from .settings import Settings
-from .settings import ZET_DEFAULT_REPO, ZET_LOCAL_ENV_PATH
+from .settings import ZET_DEFAULT_REPO, ZET_REPOS
 
 
 def list_zets(
@@ -23,7 +22,7 @@ def list_zets(
         zets (List[str]): List of zets.
     """
 
-    repo = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")[zet_repo]["folder"]
+    repo = ZET_REPOS[zet_repo]["folder"]
 
     zet_list = []
     if full_path:

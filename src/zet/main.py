@@ -195,7 +195,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-p",
         "--path",
         action="store",
-        default=get_default_env(),
+        default=ZET_DEFAULT_REPO,
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_open_editor.add_argument(
