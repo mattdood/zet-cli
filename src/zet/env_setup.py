@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 
-from .settings import ZET_HOME, ZET_LOCAL_ENV_FOLDER, ZET_LOCAL_ENV_PATH
+from .settings import Settings, ZET_HOME, ZET_LOCAL_ENV_FOLDER, ZET_LOCAL_ENV_PATH
 
 
 def generate_env() -> None:
@@ -11,6 +11,12 @@ def generate_env() -> None:
     if not os.path.exists(ZET_LOCAL_ENV_PATH):
         os.makedirs(ZET_LOCAL_ENV_FOLDER)
         shutil.copyfile(example_settings, ZET_LOCAL_ENV_PATH)
+
+        # add location of default template
+        keys = ["templates", "default", "path"]
+        value = os.path.join(ZET_HOME, "src/zet/templates/readme.md")
+        settings = Settings(ZET_LOCAL_ENV_PATH)
+        settings.update_setting(keys, value)
 
 
 def add_repo(zet_repo: str, zet_path: str = "zets/", template: str = "default") -> None:
@@ -39,13 +45,5 @@ def add_repo(zet_repo: str, zet_path: str = "zets/", template: str = "default") 
         }
     }
 
-    # Loading the entire file then truncating
-    # and re-writing it is pretty inefficient
-    # but at least the file is small?
-    config_file = open(ZET_LOCAL_ENV_PATH, "r+")
-    config_data = json.load(config_file)
-    repos = config_data["zet_repos"]
-    repos.update(new_repo)
-    config_file.seek(0)
-    json.dump(config_data, config_file, indent=4)
-
+    settings = Settings(ZET_LOCAL_ENV_PATH)
+    settings.append_setting("zet_repos", new_repo)
