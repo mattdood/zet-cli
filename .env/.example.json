@@ -9,12 +9,12 @@
     },
     "templates": {
         "default": {
-            "location": ""
+            "path": ""
         }
     },
     "zet_repos": {
         "zets": {
-            "folder": "zets/",
+            "folder": "zets/zets/",
             "template": "default"
         }
     }
