@@ -2,17 +2,16 @@ import json
 import os
 
 from src.zet.settings import ZET_INSTALL_PATH, ZET_LOCAL_ENV_PATH
-from src.zet.env_setup import add_repo, generate_env
+from src.zet.env_setup import add_repo
 
 
-def test_env_generates(cleanup_run):
+def test_env_generates(zet_settings):
     """Creates local settings.
 
     We have to cleanup any other test
     settings that may exist prior to
     running this.
     """
-    generate_env()
     assert os.path.exists("zets/.env/.local.json")
 
 
@@ -26,7 +25,7 @@ def test_add_repo(zet_settings):
         Repos are placed in a user-defined directory
         outside of the predefined area.
     """
-    zet_repo = "some_repo"
+    zet_repo = "test_repo"
     zet_path = os.path.join(ZET_INSTALL_PATH, zet_repo)
     zet_other = "other/"
     zet_other_repo = "some_other_repo"
