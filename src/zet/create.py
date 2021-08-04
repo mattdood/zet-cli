@@ -1,12 +1,16 @@
 import datetime
 import fileinput
 import os
+
 import shutil
 import time
-from typing import Dict, List
+from typing import List
 
-from .settings import Settings
-from .settings import ZET_DEFAULT_REPO, ZET_DEFAULT_TEMPLATE, ZET_LOCAL_ENV_PATH
+from .settings import (
+    ZET_DEFAULT_REPO,
+    ZET_DEFAULT_TEMPLATE,
+    ZET_REPOS
+)
 
 
 def create_zet(
@@ -38,7 +42,7 @@ def create_zet(
     today_month = str(today.month)
     today_str = str(today.strftime("%Y%m%d%H%M%S"))
 
-    repo = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")[zet_repo]["folder"]
+    repo = ZET_REPOS[zet_repo]["folder"]
 
     full_path = os.path.join(
         repo, today_year, today_month, today_str
@@ -94,32 +98,26 @@ def bulk_import_zets(
     """
 
     zet_list = []
-    repo = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")[zet_repo]["folder"]
+    repo = ZET_REPOS[zet_repo]["folder"]
     for root, dirs, files in os.walk(files_folder):
         for file in files:
             today = datetime.datetime.now()
+            today_year = str(today.year)
+            today_month = str(today.month)
             today_str = str(today.strftime("%Y%m%d%H%M%S"))
             full_path = os.path.join(
-                repo, str(today.year), str(today.month), today_str
+                repo, today_year, today_month, today_str
             )
 
-            filename = file.split(".")[0]
-            filename = filename + "-" + today_str + ".md"
+            clean_title = file.lower().replace(' ', '-')
+            full_title = str(clean_title) + "-" + today_str + ".md"
+            filename = os.path.join(full_path, full_title)
 
-            full_file_path = os.path.join(root, file)
-            zet_filename = os.path.join(full_path, filename)
-            zet_structure = {
-                "filename": file,
-                "existing_path": full_file_path,
-                "zet_folder_path": full_path,
-                "zet_file_path": zet_filename,
-            }
-            zet_list.append(zet_structure)
+            existing_file_path = os.path.join(root, file)
+
+            if not os.path.exists(full_path):
+                os.makedirs(full_path)
+                shutil.copyfile(existing_file_path, filename)
             time.sleep(1)
-
-    for zet in zet_list:
-        if not os.path.exists(zet["zet_file_path"]):
-            os.makedirs(zet["zet_folder_path"])
-            shutil.copyfile(zet["existing_path"], zet["zet_file_path"])
 
     return zet_list
