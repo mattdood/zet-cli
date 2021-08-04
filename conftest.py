@@ -17,8 +17,11 @@ from zet.env_setup import add_repo, generate_env
 
 
 @pytest.fixture()
-def zet_settings():
+def zet_settings() -> str:
     generate_env()
+    repo_name = "test_repo"
+    add_repo(repo_name)
+    return repo_name
 
 
 @pytest.fixture
