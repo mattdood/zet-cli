@@ -1,16 +1,164 @@
+import ast
 import datetime
 import fileinput
+import itertools
+import json
 import os
 
 import shutil
 import time
-from typing import List
+from typing import Dict, List
 
 from .settings import (
     ZET_DEFAULT_REPO,
     ZET_DEFAULT_TEMPLATE,
-    ZET_REPOS
+    ZET_REPOS,
+    ZET_TEMPLATES,
 )
+
+class Zet:
+    """A Zettlekasten file.
+
+    The representation of a physical zet
+    on-disk. If one does not exist it will
+    be created after a `create()` call
+    and passed back to the caller.
+    """
+
+    def __init__(self, path: str = None):
+        self.path = path
+
+    @property
+    def metadata(self) -> Dict:
+        """Get file metadata.
+
+        Generates a dictionary of the
+        metadata available on each of the
+        zets, this assumes that a path
+        is available on generation.
+
+        This requires a consistent delimeter
+        be used to enclose a chunk of metadata
+        and that each be in a key-value form.
+
+        Example file:
+            * The delimeters below are `+++`
+            * Lists are allowed
+            * All key-values have colon and space
+                `: ` between them
+
+            -------------------------------
+            |+++                          |
+            |something: 'some-value-here' |
+            |list: ['some','values',]     |
+            |+++                          |
+            |                             |
+            |                             |
+            |                             |
+            |                             |
+            -------------------------------
+
+        Returns:
+            metadata (Dict): A dictionary of the available
+                metadata in the file.
+        """
+        if self.path:
+            metadata = {}
+
+            # read a file line by line until we
+            # hit our second delimeter
+            # this assumes we have a consistent delimeter
+            with open(self.path, "r") as file:
+                delimeter = file.readline()
+                for line in file.readlines()[1:]:
+                    if line.startswith(delimeter):
+                        break
+                    else:
+
+                        # split the line to a named key
+                        # and a value (value contains newline "\n")
+                        name, value = line.partition(": ")[::2]
+
+                        # check if the value is a list or not
+                        # example representation:
+                        # path: 'some/path/to/file.md'
+                        if "[" not in value:
+                            metadata[name.strip()] = value.rstrip().split("\'")[1]
+
+                        # value is a list
+                        # example representation:
+                        # tags: ['some', 'tag', 'here',]
+                        else:
+                            value_list = ast.literal_eval(value.rstrip())
+                            metadata[name.strip()] = value_list
+            return metadata
+        else:
+            raise Exception("Zet does not exist")
+
+
+    def create(
+        self,
+        title: str,
+        category: str,
+        tags: str,
+        zet_repo: str = ZET_DEFAULT_REPO,
+        template: str = ZET_REPOS[ZET_DEFAULT_REPO]["template"],
+    ):
+        """Creates a new zet.
+
+        Takes in the zet folder and returns
+        a path to the new zet. This will
+        be time sensitive.
+
+        Params:
+            title (str): Title of the zet,
+                does not replace filename.
+            zet_repo (str): A zet repo name.
+            template (str): Template path
+                for the file.
+
+        Returns:
+            zet_path (str): Full path to the newly
+                created zet.
+        """
+        today = datetime.datetime.now()
+        today_year = str(today.year)
+        today_month = str(today.month)
+        today_str = str(today.strftime("%Y%m%d%H%M%S"))
+
+        repo = ZET_REPOS[zet_repo]["folder"]
+
+        full_path = os.path.join(
+            repo, today_year, today_month, today_str
+        )
+        clean_title = title.lower().replace(' ', '-')
+        full_title = str(clean_title) + "-" + today_str + ".md"
+        filename = os.path.join(full_path, full_title)
+        tags_list = tags.split(', ')
+        template_path = "/" + os.path.join(today_year, today_month, clean_title + "-" + today_str)
+
+        metadata = [
+            ["templatePath", template_path],
+            ["templateDate", today_str],
+            ["templateTitle", str(title)],
+            ["templateCleanTitle", str(clean_title)],
+            ["templateCategory", str(category)],
+            ["templateTags", str(tags_list)]
+        ]
+
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
+            new_file = shutil.copyfile(ZET_TEMPLATES[template]["path"], filename)
+
+            for line in fileinput.input(new_file, inplace=True):
+                for item in metadata:
+                    line = line.replace(item[0], item[1])
+                print(line, end="")
+
+                # line = re.sub(r"/{({word_match}*)}/".format(word_match=item[0]), item[1], line)
+            fileinput.close()
+        self.path = filename
+        return self
 
 
 def create_zet(
@@ -18,7 +166,7 @@ def create_zet(
     category: str,
     tags: str,
     zet_repo: str = ZET_DEFAULT_REPO,
-    template: str = ZET_DEFAULT_TEMPLATE,
+    template: str = ZET_REPOS[ZET_DEFAULT_REPO]["template"],
 ) -> str:
     """Creates a new zet.
 
@@ -64,7 +212,7 @@ def create_zet(
 
     if not os.path.exists(full_path):
         os.makedirs(full_path)
-        new_file = shutil.copyfile(template, filename)
+        new_file = shutil.copyfile(ZET_TEMPLATES[template]["path"], filename)
 
         for line in fileinput.input(new_file, inplace=True):
             for item in metadata:

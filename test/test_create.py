@@ -3,47 +3,57 @@ import time
 
 import pytest
 
-from src.zet.create import bulk_import_zets, create_zet
+from src.zet.create import bulk_import_zets
+from src.zet.create import Zet
 
 
 def test_zet_exists(zet_settings):
-    zet = create_zet(
-        "some title",
-        "some category",
-        "some, tags"
+    new_zet = Zet().create(
+        title="some title",
+        category="some category",
+        tags="some, tags"
     )
-    assert os.path.exists(zet)
+    assert os.path.exists(new_zet.path)
+
+
+def test_zet_metadata(zet_settings):
+    zet = Zet().create(
+        title="some title",
+        category="some category",
+        tags="some, tags"
+    )
+    assert zet.metadata["title"] == "some title"
 
 
 def test_unique_zets(zet_settings):
 
-    zet_one = create_zet(
+    zet_one = Zet().create(
         "some title",
         "some category",
         "some, tags",
     )
     time.sleep(1)
-    zet_two = create_zet(
+    zet_two = Zet().create(
         "some title",
         "some category",
         "some, tags"
     )
     assert zet_one != zet_two
-    assert os.path.exists(zet_one)
-    assert os.path.exists(zet_two)
+    assert os.path.exists(zet_one.path)
+    assert os.path.exists(zet_two.path)
 
 
 def test_zet_metadata(zet_settings):
-    zet = create_zet(
+    zet= Zet().create(
         "some title",
         "some category",
-        "some, tags"
+        "some, tags",
     )
-    zet_file = open(zet)
+    assert os.path.exists(zet.path)
+    zet_file = open(zet.path)
     text = ""
     for line in zet_file:
         text += line
-    assert os.path.exists(zet)
     assert "templatePath" not in text
     assert "templateDate" not in text
     assert "templateTitle" not in text
