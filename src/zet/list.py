@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List
+from typing import List
 
 from .settings import ZET_DEFAULT_REPO, ZET_REPOS
 

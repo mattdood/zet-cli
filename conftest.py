@@ -19,7 +19,6 @@ from zet.env_setup import add_repo, generate_env
 @pytest.fixture()
 def zet_settings() -> str:
     generate_env()
-    add_repo("zets", "zets/")
     return "zets" # default repo name returned for subsequent
 
 
@@ -91,14 +90,14 @@ def zet_git_repo_changes(zet_settings, zet_git_repo) -> str:
     git_add_zets(zet_settings)
 
 
-# @pytest.fixture(autouse=True)
-# def cleanup_run():
-#     """Removes workspaces on teardown."""
-#     yield
-#     default_workspace = "zets/"
-#     other_workspace = "other/"
-#     if os.path.exists(default_workspace):
-#         shutil.rmtree(default_workspace)
-#     if os.path.exists(other_workspace):
-#         shutil.rmtree(other_workspace)
+@pytest.fixture(autouse=True)
+def cleanup_run():
+    """Removes workspaces on teardown."""
+    yield
+    default_workspace = "zets/"
+    other_workspace = "other/"
+    if os.path.exists(default_workspace):
+        shutil.rmtree(default_workspace)
+    if os.path.exists(other_workspace):
+        shutil.rmtree(other_workspace)
 
