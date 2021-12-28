@@ -22,18 +22,15 @@ class Settings:
         self.path = path
         self.data = self.load_settings(self.path)
 
-
     def refresh(self):
         self.data = self.load_settings(self.path)
         return self
-
 
     @staticmethod
     def load_settings(path: str) -> Dict:
         with open(path, "r") as file:
             data = json.load(file)
         return data
-
 
     def get_setting(self, key: str = None):
         # TODO: Test no key
@@ -42,6 +39,8 @@ class Settings:
         else:
             return self.data
 
+    def get_defaults(self) -> Dict:
+        return self.data["defaults"]
 
     def set_item(self, settings, keys: List[str], value) -> None:
         key = keys.pop(0)
@@ -50,22 +49,32 @@ class Settings:
         except (IndexError, KeyError):
             settings[key] = value
 
-
     def update_setting(self, keys: List[str], value) -> None:
+        # retrieve data from settings
         settings_file = open(self.path, "r+")
         data = json.load(settings_file)
+
+        # set new data values
         self.set_item(data, keys, value)
+
+        # dump data to file
         settings_file.seek(0)
         json.dump(data, settings_file, indent=4)
-
+        settings_file.close()
 
     def append_setting(self, key: str, value) -> None:
+        # retrieve data from settings
         settings_file = open(self.path, "r+")
         config_data = json.load(settings_file)
+
+        # update value
         data = config_data[key]
         data.update(value)
+
+        # dump data to file
         settings_file.seek(0)
         json.dump(config_data, settings_file, indent=4)
+        settings_file.close()
 
 
 if not os.path.exists(ZET_LOCAL_ENV_PATH):
@@ -73,7 +82,7 @@ if not os.path.exists(ZET_LOCAL_ENV_PATH):
     generate_env()
 
 
-local_settings = Settings(ZET_LOCAL_ENV_PATH).refresh()
+local_settings = Settings(ZET_LOCAL_ENV_PATH)
 ZET_DEFAULTS = local_settings.get_setting("defaults")
 ZET_DEFAULT_EDITOR = ZET_DEFAULTS["editor"]
 ZET_DEFAULT_REPO = ZET_DEFAULTS["repo"]
