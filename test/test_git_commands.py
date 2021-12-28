@@ -12,13 +12,13 @@ from src.zet.settings import Settings, ZET_LOCAL_ENV_PATH
 def test_git_init_initializes(zet_settings):
     settings = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")
     print(settings)
-    assert os.path.exists(settings["test_repo"]["folder"])
-    git_init = git_init_zets("test_repo")
+    assert os.path.exists(settings[zet_settings]["folder"])
+    git_init = git_init_zets(settings[zet_settings])
     assert "Initialized empty Git repository" in str(git_init)
 
 
-def test_git_add_adds_changes(zet_git_repo):
-    git_add = git_add_zets("test_repo")
+def test_git_add_adds_changes(zet_settings, zet_git_repo):
+    git_add = git_add_zets(zet_settings)
     assert "" in str(git_add)
 
 
