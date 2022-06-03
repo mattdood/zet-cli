@@ -6,19 +6,21 @@ from typing import List
 
 import pytest
 
-from src.zet.create import create_zet, Zet
+from src.zet.create import Zet
 from src.zet.git_commands import git_add_zets, git_commit_zets, git_init_zets
 from src.zet.list import list_zets
 from src.zet.settings import (
     Settings,
     ZET_LOCAL_ENV_PATH
 )
-from zet.env_setup import add_repo, generate_env
+from src.zet.repo import add_repo
+
+settings = Settings(ZET_LOCAL_ENV_PATH)
 
 
 @pytest.fixture()
 def zet_settings() -> str:
-    generate_env()
+    Settings(ZET_LOCAL_ENV_PATH)
     add_repo("zets")
     return "zets" # default repo name returned for subsequent
 

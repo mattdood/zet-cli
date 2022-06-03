@@ -2,7 +2,7 @@ import json
 import os
 
 from src.zet.settings import ZET_INSTALL_PATH, ZET_LOCAL_ENV_PATH
-from src.zet.env_setup import add_repo
+from src.zet.repo import add_repo
 
 
 def test_env_generates(zet_settings):
