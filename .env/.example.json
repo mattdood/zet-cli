@@ -8,9 +8,7 @@
         }
     },
     "templates": {
-        "default": {
-            "path": ""
-        }
+        "default": ""
     },
     "zet_repos": {
         "zets": {
