@@ -14,6 +14,21 @@ ZET_LOCAL_ENV_PATH = ZET_LOCAL_ENV_FOLDER + ".local.json"
 
 class Settings:
     """Object to interact with `.local.json`.
+
+    The settings for this project are created
+    at runtime if they don't exist already. This ensures
+    that the user has a defaulted config upon installation,
+    this can be replaced later at the `~/zet/.env/.local.json`
+    path.
+
+    Settings are stored in JSON to allow flexibility,
+    this means that there are some occassions where
+    the settings will change during execution and require
+    refreshing from the file.
+
+    To conserve space elsewhere and keep references DRY there
+    are quite a few getter methods to allow access to the
+    underlying configuration file.
     """
 
     def __init__(self, path: str):
@@ -30,33 +45,58 @@ class Settings:
 
         # after initial setup the template needs
         # to have a path discovery, then add it to the config
-        print(self.data)
         if self.data["templates"]["default"] == "":
             keys = ["templates", "default"]
             value = os.path.join(ZET_HOME, "src/zet/templates/readme.md")
             self.update_setting(keys, value)
 
     def refresh(self):
+        """Checks for settings changes.
+
+        If an execution creates a change in the
+        settings, then relies on that change during
+        the remainder of the process it will need
+        to reference an up-to-date set of data.
+
+        This ensures all data is kept in-line with the
+        JSON file.
+
+        Example:
+            1. User installs for the first time
+            1. Executing a `zet create` immediately means there
+                are no template paths because the initial data load
+                did not have one (env is being set up).
+            1. Refreshing enables the user to have that change caught
+                during execution time. (See `Zet.create()`)
+        """
         self.data = self.load_settings(self.path)
         return self
 
     @staticmethod
     def load_settings(path: str) -> Dict:
+        """Load settings from the JSON file."""
         with open(path, "r") as file:
             data = json.load(file)
         return data
 
     def get_setting(self, key: str = None):
-        # TODO: Test no key
+        """Fetches a block of settings."""
         if key:
             return self.data[key]
         else:
             return self.data
 
     def get_defaults(self) -> Dict:
+        """Returns all default settings."""
         return self.data["defaults"]
 
     def set_item(self, settings, keys: List[str], value) -> None:
+        """Recursively check settings against keys.
+
+        Recurses a list of keys to arrive at
+        the final key, then set the value to
+        something new.
+        """
         key = keys.pop(0)
         try:
             self.set_item(settings[key], keys, value)
@@ -64,6 +104,15 @@ class Settings:
             settings[key] = value
 
     def update_setting(self, keys: List[str], value) -> None:
+        """Updates a setting.
+
+        Changes the underlying JSON config
+        by traveling down a list of keys
+        (in order) to update the destination value.
+
+        TODO:
+            * This can probably be revised.
+        """
         # retrieve data from settings
         settings_file = open(self.path, "r+")
         data = json.load(settings_file)
@@ -77,6 +126,11 @@ class Settings:
         settings_file.close()
 
     def append_setting(self, key: str, value) -> None:
+        """Adds a new entry to a setting.
+
+        This allows for things like new repos,
+        and templates.
+        """
         # retrieve data from settings
         settings_file = open(self.path, "r+")
         config_data = json.load(settings_file)

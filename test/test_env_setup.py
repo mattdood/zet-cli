@@ -1,8 +1,8 @@
 import json
 import os
 
-from src.zet.settings import ZET_INSTALL_PATH, ZET_LOCAL_ENV_PATH
 from src.zet.repo import add_repo
+from src.zet.settings import ZET_INSTALL_PATH, ZET_LOCAL_ENV_PATH
 
 
 def test_env_generates(zet_settings):

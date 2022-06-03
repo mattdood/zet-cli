@@ -4,18 +4,13 @@ import sys
 import textwrap
 from typing import Optional, Sequence
 
-from .create import bulk_import_zets, Zet
+from .create import Zet, bulk_import_zets
 from .editor_commands import open_editor
-from .git_commands import (
-    git_add_zets,
-    git_commit_zets,
-    git_init_zets,
-    git_pull_zets,
-    git_push_zets
-)
+from .git_commands import (git_add_zets, git_commit_zets, git_init_zets,
+                           git_pull_zets, git_push_zets)
 from .list import list_zets
 from .repo import add_repo
-from .settings import Settings, ZET_LOCAL_ENV_PATH
+from .settings import ZET_LOCAL_ENV_PATH, Settings
 
 settings = Settings(ZET_LOCAL_ENV_PATH)
 
@@ -76,7 +71,6 @@ def main(argv: Optional[Sequence[str]] = None):
     )
     parser_create.set_defaults(which="create")
 
-
     parser_bulk = subparsers.add_parser("bulk", help="Bulk imports zets from a folder.")
     parser_bulk.add_argument(
         "-f",
@@ -94,7 +88,6 @@ def main(argv: Optional[Sequence[str]] = None):
         help="A zet repo folder name. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_bulk.set_defaults(which="bulk")
-
 
     parser_add_repo = subparsers.add_parser("add_repo", help="Creates a zet repo.")
     parser_add_repo.add_argument(
@@ -114,7 +107,6 @@ def main(argv: Optional[Sequence[str]] = None):
     )
     parser_add_repo.set_defaults(which="add_repo")
 
-
     parser_list = subparsers.add_parser("list", help="List zets from a folder.")
     parser_list.add_argument(
         "-r",
@@ -132,7 +124,6 @@ def main(argv: Optional[Sequence[str]] = None):
     )
     parser_list.set_defaults(which="list")
 
-
     parser_git_init = subparsers.add_parser("init", help="Git init inside folder.")
     parser_git_init.add_argument(
         "-r",
@@ -142,7 +133,6 @@ def main(argv: Optional[Sequence[str]] = None):
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_init.set_defaults(which="init")
-
 
     parser_git_add = subparsers.add_parser(
         "add", help="Git add all zets inside folder."
@@ -155,7 +145,6 @@ def main(argv: Optional[Sequence[str]] = None):
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_add.set_defaults(which="add")
-
 
     parser_git_commit = subparsers.add_parser(
         "commit", help="Git commit zets in folder."
@@ -176,7 +165,6 @@ def main(argv: Optional[Sequence[str]] = None):
     )
     parser_git_commit.set_defaults(which="commit")
 
-
     parser_git_push = subparsers.add_parser("push", help="Git push zets in folder.")
     parser_git_push.add_argument(
         "-r",
@@ -187,10 +175,8 @@ def main(argv: Optional[Sequence[str]] = None):
     )
     parser_git_push.set_defaults(which="push")
 
-
     parser_git_pull = subparsers.add_parser("pull", help="Git pull all zet repos from settings.")
     parser_git_pull.set_defaults(which="pull")
-
 
     parser_open_editor = subparsers.add_parser("editor", help="Open the editor to a repo.")
     parser_open_editor.add_argument(
@@ -208,7 +194,6 @@ def main(argv: Optional[Sequence[str]] = None):
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_open_editor.set_defaults(which="editor")
-
 
     if len(argv) == 0:
         argv = ["help"]
@@ -246,7 +231,6 @@ def main(argv: Optional[Sequence[str]] = None):
         open_editor(path=args.path, editor=args.editor)
     else:
         print("Unknown command: ", args)
-
 
     print(args.__dict__)
 

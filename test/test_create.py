@@ -3,8 +3,7 @@ import time
 
 import pytest
 
-from src.zet.create import bulk_import_zets
-from src.zet.create import Zet
+from src.zet.create import Zet, bulk_import_zets
 
 
 def test_zet_exists(zet_settings):
@@ -49,7 +48,7 @@ def test_unique_zets(zet_settings):
 
 
 def test_zet_metadata(zet_settings):
-    zet= Zet()
+    zet = Zet()
     zet.create(
         "some title",
         "some category",

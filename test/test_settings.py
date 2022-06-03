@@ -1,6 +1,6 @@
 import pytest
 
-from src.zet.settings import Settings, ZET_LOCAL_ENV_PATH
+from src.zet.settings import ZET_LOCAL_ENV_PATH, Settings
 
 
 def test_settings_retrieval(zet_settings):
@@ -9,8 +9,9 @@ def test_settings_retrieval(zet_settings):
 
     settings = Settings(ZET_LOCAL_ENV_PATH)
     data = settings.get_setting()
-    assert data != None
+    assert data is not None
     assert isinstance(data, dict)
+
 
 def test_settings_append_dict(zet_settings):
     key = "zet_repos"
@@ -24,12 +25,14 @@ def test_settings_append_dict(zet_settings):
     new_settings = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")
     assert any(value["some_name"] == new_settings[repo] for repo in new_settings)
 
+
 def test_settings_update_key(zet_settings):
     keys = ["defaults", "editor", "name"]
     value = "vscode"
     Settings(ZET_LOCAL_ENV_PATH).update_setting(keys, value)
     check_settings = Settings(ZET_LOCAL_ENV_PATH).get_setting("defaults")
-    assert value ==  check_settings["editor"]["name"]
+    assert value == check_settings["editor"]["name"]
+
 
 def test_refresh(zet_settings):
     """

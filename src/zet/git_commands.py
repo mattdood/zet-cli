@@ -1,5 +1,4 @@
 import subprocess
-from typing import Dict
 
 from .settings import Settings, ZET_LOCAL_ENV_PATH
 

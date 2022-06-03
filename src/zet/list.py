@@ -1,15 +1,12 @@
 import os
 from typing import List
 
-from .settings import Settings, ZET_LOCAL_ENV_PATH
+from .settings import ZET_LOCAL_ENV_PATH, Settings
 
 settings = Settings(ZET_LOCAL_ENV_PATH)
 
 
-def list_zets(
-    zet_repo: str = None,
-    full_path: bool = False,
-) -> List[str]:
+def list_zets(zet_repo: str = None, full_path: bool = False) -> List[str]:
     """Lists zets.
 
     This will be a catch-all for listing
@@ -43,3 +40,4 @@ def list_zets(
                     zet_list.append(file)
 
     return zet_list
+
