@@ -5,7 +5,7 @@ from .settings import Settings
 from .settings import ZET_DEFAULT_REPO, ZET_LOCAL_ENV_PATH, ZET_REPOS
 
 
-def git_init_zets(zet_repo: str = ZET_DEFAULT_REPO):
+def git_init_zets(zet_repo: str = "zets"):
     """Initializes a git repo.
 
     Params:

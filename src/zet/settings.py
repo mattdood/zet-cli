@@ -66,15 +66,19 @@ class Settings:
         # retrieve data from settings
         settings_file = open(self.path, "r+")
         config_data = json.load(settings_file)
+        settings_file.close()
 
         # update value
         data = config_data[key]
         data.update(value)
 
         # dump data to file
-        settings_file.seek(0)
-        json.dump(config_data, settings_file, indent=4)
-        settings_file.close()
+        with open(self.path, "w") as settings_file:
+            json.dump(config_data, settings_file, indent=4)
+            settings_file.close()
+
+        print(config_data)
+
 
 
 if not os.path.exists(ZET_LOCAL_ENV_PATH):

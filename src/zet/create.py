@@ -16,6 +16,12 @@ from .settings import (
     ZET_TEMPLATES,
 )
 
+
+class ZetDoesNotExistException(Exception):
+    """Zet does not exist."""
+    pass
+
+
 class Zet:
     """A Zettlekasten file.
 
@@ -36,6 +42,8 @@ class Zet:
         metadata available on each of the
         zets, this assumes that a path
         is available on generation.
+
+        Does not support multi-line metadata.
 
         This requires a consistent delimeter
         be used to enclose a chunk of metadata
@@ -93,8 +101,7 @@ class Zet:
                             metadata[name.strip()] = value_list
             return metadata
         else:
-            raise Exception("Zet does not exist")
-
+            raise ZetDoesNotExistException("Zet does not exist")
 
     def create(
         self,
@@ -102,8 +109,7 @@ class Zet:
         category: str,
         tags: str,
         zet_repo: str = ZET_DEFAULT_REPO,
-        template: str = ZET_REPOS[ZET_DEFAULT_REPO]["template"],
-    ):
+        template: str = ZET_REPOS[ZET_DEFAULT_REPO]["template"]):
         """Creates a new zet.
 
         Takes in the zet folder and returns
