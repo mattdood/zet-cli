@@ -8,7 +8,8 @@ from src.zet.create import Zet
 
 
 def test_zet_exists(zet_settings):
-    new_zet = Zet().create(
+    new_zet = Zet()
+    new_zet.create(
         title="some title",
         category="some category",
         tags="some, tags"
@@ -17,7 +18,8 @@ def test_zet_exists(zet_settings):
 
 
 def test_zet_metadata(zet_settings):
-    zet = Zet().create(
+    zet = Zet()
+    zet.create(
         title="some title",
         category="some category",
         tags="some, tags"
@@ -27,16 +29,19 @@ def test_zet_metadata(zet_settings):
 
 def test_unique_zets(zet_settings):
 
-    zet_one = Zet().create(
+    zet_one = Zet()
+    zet_one.create(
         "some title",
         "some category",
         "some, tags",
     )
     time.sleep(1)
-    zet_two = Zet().create(
+
+    zet_two = Zet()
+    zet_two.create(
         "some title",
         "some category",
-        "some, tags"
+        "some, tags",
     )
     assert zet_one != zet_two
     assert os.path.exists(zet_one.path)
@@ -44,7 +49,8 @@ def test_unique_zets(zet_settings):
 
 
 def test_zet_metadata(zet_settings):
-    zet= Zet().create(
+    zet= Zet()
+    zet.create(
         "some title",
         "some category",
         "some, tags",
