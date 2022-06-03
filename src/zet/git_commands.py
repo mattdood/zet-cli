@@ -1,11 +1,12 @@
 import subprocess
 from typing import Dict
 
-from .settings import Settings
-from .settings import ZET_DEFAULT_REPO, ZET_LOCAL_ENV_PATH, ZET_REPOS
+from .settings import Settings, ZET_LOCAL_ENV_PATH
+
+settings = Settings(ZET_LOCAL_ENV_PATH)
 
 
-def git_init_zets(zet_repo: str = "zets"):
+def git_init_zets(zet_repo: str = None):
     """Initializes a git repo.
 
     Params:
@@ -16,11 +17,15 @@ def git_init_zets(zet_repo: str = "zets"):
         subprocess (Pipe): Output is the terminal
             messages of the bash command.
     """
-    repo = ZET_REPOS[zet_repo]["folder"]
+    if zet_repo:
+        repo = settings.get_repo_path(zet_repo)
+    else:
+        # default repo
+        repo = settings.get_default_repo_path()
     return subprocess.check_output(['git', 'init'], cwd = repo)
 
 
-def git_add_zets(zet_repo: str = ZET_DEFAULT_REPO):
+def git_add_zets(zet_repo: str = None):
     """Adds all files to staging in a repo.
 
     Params:
@@ -33,11 +38,15 @@ def git_add_zets(zet_repo: str = ZET_DEFAULT_REPO):
         subprocess (Pipe): Output is the terminal
             messages of the bash command.
     """
-    repo = ZET_REPOS[zet_repo]["folder"]
+    if zet_repo:
+        repo = settings.get_repo_path(zet_repo)
+    else:
+        # default repo
+        repo = settings.get_default_repo_path()
     return subprocess.check_output(['git', 'add', '.'], cwd = repo)
 
 
-def git_commit_zets(message: str, zet_repo: str = ZET_DEFAULT_REPO):
+def git_commit_zets(message: str, zet_repo: str = None):
     """Performs git commit in a repo.
 
     Params:
@@ -51,11 +60,15 @@ def git_commit_zets(message: str, zet_repo: str = ZET_DEFAULT_REPO):
         subprocess (Pipe): Output is the terminal
             messages of the bash command.
     """
-    repo = ZET_REPOS[zet_repo]["folder"]
+    if zet_repo:
+        repo = settings.get_repo_path(zet_repo)
+    else:
+        # default repo
+        repo = settings.get_default_repo_path()
     return subprocess.check_output(['git', 'commit', '-m', message], cwd = repo)
 
 
-def git_push_zets(zet_repo: str = ZET_DEFAULT_REPO):
+def git_push_zets(zet_repo: str = None):
     """Remote pushes a zet repo.
 
     Params:
@@ -68,7 +81,11 @@ def git_push_zets(zet_repo: str = ZET_DEFAULT_REPO):
         subprocess (Pipe): Output is the terminal
             messages of the bash command.
     """
-    repo = ZET_REPOS[zet_repo]["folder"]
+    if zet_repo:
+        repo = settings.get_repo_path(zet_repo)
+    else:
+        # default repo
+        repo = settings.get_default_repo_path()
     return subprocess.check_output(['git', 'push'], cwd = repo)
 
 
@@ -79,7 +96,7 @@ def git_pull_zets() -> None:
         folder (Dict[str, str]): A dictionary
             of zet folders. Defaults to ZET_FOLDERS.
     """
-    repos = ZET_REPOS
+    repos = settings.data["zet_repos"]
     keys = list(repos.keys())
     for key in keys:
         subprocess.check_output(['git', 'pull'], cwd = repos[key]["folder"])

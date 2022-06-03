@@ -4,9 +4,8 @@ import sys
 import textwrap
 from typing import Optional, Sequence
 
-from .create import bulk_import_zets, create_zet
+from .create import bulk_import_zets, Zet
 from .editor_commands import open_editor
-from .env_setup import add_repo
 from .git_commands import (
     git_add_zets,
     git_commit_zets,
@@ -15,7 +14,10 @@ from .git_commands import (
     git_push_zets
 )
 from .list import list_zets
-from .settings import ZET_DEFAULT_TEMPLATE, ZET_DEFAULT_EDITOR, ZET_DEFAULT_REPO
+from .repo import add_repo
+from .settings import Settings, ZET_LOCAL_ENV_PATH
+
+settings = Settings(ZET_LOCAL_ENV_PATH)
 
 
 def main(argv: Optional[Sequence[str]] = None):
@@ -62,14 +64,14 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder name. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_create.add_argument(
         "-tem",
         "--template",
         action="store",
-        default=ZET_DEFAULT_TEMPLATE,
+        default=settings.get_default_template(),
         help="A zet template name. Defaults to ZET_DEFAULT_TEMPLATE."
     )
     parser_create.set_defaults(which="create")
@@ -88,7 +90,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder name. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_bulk.set_defaults(which="bulk")
@@ -100,7 +102,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "--zet_repo",
         action="store",
         required=True,
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo title."
     )
     parser_add_repo.add_argument(
@@ -118,7 +120,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_list.add_argument(
@@ -136,7 +138,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_init.set_defaults(which="init")
@@ -149,7 +151,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_add.set_defaults(which="add")
@@ -169,7 +171,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_commit.set_defaults(which="commit")
@@ -180,7 +182,7 @@ def main(argv: Optional[Sequence[str]] = None):
         "-r",
         "--zet_repo",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_git_push.set_defaults(which="push")
@@ -195,14 +197,14 @@ def main(argv: Optional[Sequence[str]] = None):
         "-p",
         "--path",
         action="store",
-        default=ZET_DEFAULT_REPO,
+        default=settings.get_default_repo(),
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_open_editor.add_argument(
         "-e",
         "--editor",
         action="store",
-        default=ZET_DEFAULT_EDITOR,
+        default=settings.get_editor_command(),
         help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
     )
     parser_open_editor.set_defaults(which="editor")
@@ -215,14 +217,15 @@ def main(argv: Optional[Sequence[str]] = None):
     print(type(args))
 
     if args.which == "create":
-        zet_path = create_zet(
+        zet = Zet()
+        zet.create(
             title=args.title,
             category=args.category,
             tags=args.tags,
             zet_repo=args.zet_repo,
             template=args.template
         )
-        open_editor(path=zet_path)
+        open_editor(path=zet.path)
     elif args.which == "bulk":
         bulk_import_zets(files_folder=args.files_folder, zet_repo=args.zet_repo)
     elif args.which == "add_repo":
