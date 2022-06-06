@@ -7,34 +7,45 @@ from typing import Dict, List, Union
 import pytest
 
 from src.zet.create import Zet
-from src.zet.git_commands import git_add_zets, git_commit_zets, git_init_zets
+from src.zet.git_commands import git_add_zets, git_init_zets
 from src.zet.list import list_zets
 from src.zet.repo import add_repo
-from src.zet.settings import ZET_LOCAL_ENV_PATH, Settings
-
-settings = Settings(ZET_LOCAL_ENV_PATH)
+from src.zet.settings import Settings
 
 
-@pytest.fixture()
-def zet_settings() -> str:
-    Settings(ZET_LOCAL_ENV_PATH)
+@pytest.fixture(scope="module")
+def zet_settings(pytestconfig) -> Settings:
+    # Setup
+    # creates local settings
+    settings = Settings()
     add_repo("zets")
-    return "zets"  # default repo name returned for subsequent
+    yield settings.refresh()  # default repo name returned for subsequent
+
+    # Teardown
+    scratch_repo_one = "other/"
+
+    workspace = pytestconfig.rootdir / "~"
+    if workspace.exists():
+        shutil.rmtree(workspace)
+
+    if os.path.exists(scratch_repo_one):
+        shutil.rmtree(scratch_repo_one)
 
 
 @pytest.fixture
-def zet(zet_settings: str) -> str:
-    sample_zet = Zet().create(
+def zet(zet_settings: Settings) -> str:
+    sample_zet = Zet()
+    sample_zet.create(
         title="some title",
         category="some category",
         tags="some, tags",
-        zet_repo=zet_settings,
+        zet_repo=zet_settings.get_default_repo(),
     )
     return sample_zet.path
 
 
 @pytest.fixture
-def zet_list(zet_settings: str) -> List[str]:
+def zet_list(zet_settings: Settings) -> List[str]:
 
     for i in range(5):
         time.sleep(1)
@@ -42,15 +53,15 @@ def zet_list(zet_settings: str) -> List[str]:
             "some title",
             "some category",
             "some, tags",
-            zet_settings
+            zet_settings.get_default_repo()
         )
-    sample_zets = list_zets(zet_settings)
+    sample_zets = list_zets(zet_settings.get_default_repo())
 
     return sample_zets
 
 
 @pytest.fixture
-def zet_list_paths(zet_settings: str) -> List[str]:
+def zet_list_paths(zet_settings: Settings) -> List[str]:
 
     for i in range(5):
         time.sleep(1)
@@ -58,40 +69,28 @@ def zet_list_paths(zet_settings: str) -> List[str]:
             "some title",
             "some category",
             "some, tags",
-            zet_settings
+            zet_settings.get_default_repo()
         )
-    sample_zets = list_zets(zet_settings, True)
+    sample_zets = list_zets(zet_settings.get_default_repo(), True)
 
     return sample_zets
 
 
 @pytest.fixture
-def zet_git_repo(zet_settings: str) -> Union[None, Dict]:
+def zet_git_repo(zet_settings: Settings) -> Union[None, Dict]:
     try:
-        git_init_zets(zet_settings)
+        git_init_zets(zet_settings.get_default_repo())
     except subprocess.CalledProcessError as error:
         error_dict = {"response_code": error.returncode, "output": error.output}
         return error_dict
 
 
 @pytest.fixture
-def zet_git_repo_changes(zet_settings: str, zet_git_repo) -> str:
-    repo_path = Settings(ZET_LOCAL_ENV_PATH).get_setting("zet_repos")[zet_settings]
-    new_file_path = os.path.join(repo_path["folder"], "some_file.md")
+def zet_git_repo_changes(zet_settings: Settings, zet_git_repo) -> str:
+    repo_path = zet_settings.get_default_repo_path()
+    new_file_path = os.path.join(repo_path, "some_file.md")
     new_file = open(new_file_path, "w")
     new_file.writelines(["some text", "some other text"])
     new_file.close()
-    git_add_zets(zet_settings)
-
-
-@pytest.fixture(autouse=True)
-def cleanup_run():
-    """Removes workspaces on teardown."""
-    yield
-    default_workspace = "zets/"
-    other_workspace = "other/"
-    if os.path.exists(default_workspace):
-        shutil.rmtree(default_workspace)
-    if os.path.exists(other_workspace):
-        shutil.rmtree(other_workspace)
+    git_add_zets(zet_settings.get_default_repo())
 
