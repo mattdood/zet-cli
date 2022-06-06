@@ -24,6 +24,8 @@ def test_zet_metadata(zet_settings):
         tags="some, tags"
     )
     assert zet.metadata["title"] == "some title"
+    assert zet.metadata["category"] == "some category"
+    assert zet.metadata["tags"] == ["some", "tags"]
 
 
 def test_unique_zets(zet_settings):
