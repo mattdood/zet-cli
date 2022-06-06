@@ -18,6 +18,15 @@ jobs:
       - name: Install Requirements
         run: pip install -r requirements-dev.txt
 
+      # This is needed to test the CLI entrypoint
+      - name: Install zet-cli
+        run: python setup.py
+
+      - name: Git config for tests
+        run: |
+          git config --global user.name "test"
+          git config --global user.email "test@zet-cli.test"
+
       - name: Run Pre-Commit
         run: pre-commit run --all-files
 
