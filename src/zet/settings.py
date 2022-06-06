@@ -7,9 +7,7 @@ from typing import Dict, List
 # Project install defaults
 ZET_PROJECT = Path(__file__)
 ZET_HOME = ZET_PROJECT.parents[2]
-ZET_INSTALL_PATH = "zets/"
-ZET_LOCAL_ENV_FOLDER = ZET_INSTALL_PATH + ".env/"
-ZET_LOCAL_ENV_PATH = ZET_LOCAL_ENV_FOLDER + ".local.json"
+ZET_INSTALL_PATH = Path("~/zets/")
 
 
 class Settings:
@@ -31,24 +29,25 @@ class Settings:
     underlying configuration file.
     """
 
-    def __init__(self, path: str):
+    def __init__(self, install_path: Path = ZET_INSTALL_PATH) -> None:
 
-        if not os.path.exists(ZET_LOCAL_ENV_PATH):
-            example_settings = os.path.join(ZET_HOME, ".env/.example.json")
-            os.makedirs(ZET_LOCAL_ENV_FOLDER)
-            shutil.copyfile(example_settings, ZET_LOCAL_ENV_PATH)
-            keys = ["templates", "default"]
-            value = os.path.join(ZET_HOME, "src/zet/templates/readme.md")
+        self.zet_local_env_folder = install_path / ".env/"
+        self.zet_local_env_path = self.zet_local_env_folder / ".local.json"
 
-        self.path = path
-        self.data = self.load_settings(self.path)
+        if not install_path.exists():
+            example_settings = ZET_HOME / ".env/.example.json"
+            os.makedirs(self.zet_local_env_folder)
+            shutil.copyfile(example_settings, self.zet_local_env_path)
+
+        self.install_path = install_path
+        self.data = self.load_settings(self.zet_local_env_path)
 
         # after initial setup the template needs
         # to have a path discovery, then add it to the config
         if self.data["templates"]["default"] == "":
             keys = ["templates", "default"]
-            value = os.path.join(ZET_HOME, "src/zet/templates/readme.md")
-            self.update_setting(keys, value)
+            value = ZET_HOME / "src/zet/templates/readme.md"
+            self.update_setting(keys, value.as_posix())
 
     def refresh(self):
         """Checks for settings changes.
@@ -69,13 +68,13 @@ class Settings:
             1. Refreshing enables the user to have that change caught
                 during execution time. (See `Zet.create()`)
         """
-        self.data = self.load_settings(self.path)
+        self.data = self.load_settings(self.zet_local_env_path)
         return self
 
     @staticmethod
-    def load_settings(path: str) -> Dict:
+    def load_settings(path: Path) -> Dict:
         """Load settings from the JSON file."""
-        with open(path, "r") as file:
+        with path.open("r") as file:
             data = json.load(file)
         return data
 
@@ -114,7 +113,7 @@ class Settings:
             * This can probably be revised.
         """
         # retrieve data from settings
-        settings_file = open(self.path, "r+")
+        settings_file = self.zet_local_env_path.open("r+")
         data = json.load(settings_file)
 
         # set new data values
@@ -132,7 +131,7 @@ class Settings:
         and templates.
         """
         # retrieve data from settings
-        settings_file = open(self.path, "r+")
+        settings_file = self.zet_local_env_path.open("r+")
         config_data = json.load(settings_file)
         settings_file.close()
 
@@ -141,7 +140,7 @@ class Settings:
         data.update(value)
 
         # dump data to file
-        with open(self.path, "w") as settings_file:
+        with self.zet_local_env_path.open("w") as settings_file:
             json.dump(config_data, settings_file, indent=4)
             settings_file.close()
 
