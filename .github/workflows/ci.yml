@@ -20,7 +20,7 @@ jobs:
 
       # This is needed to test the CLI entrypoint
       - name: Install zet-cli
-        run: python setup.py
+        run: python3 -m pip install -e .
 
       - name: Git config for tests
         run: |
