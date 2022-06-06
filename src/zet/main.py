@@ -10,9 +10,9 @@ from .git_commands import (git_add_zets, git_commit_zets, git_init_zets,
                            git_pull_zets, git_push_zets)
 from .list import list_zets
 from .repo import add_repo
-from .settings import ZET_LOCAL_ENV_PATH, Settings
+from .settings import Settings
 
-settings = Settings(ZET_LOCAL_ENV_PATH)
+settings = Settings()
 
 
 def main(argv: Optional[Sequence[str]] = None):

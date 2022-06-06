@@ -1,8 +1,8 @@
 import os
 
-from .settings import ZET_INSTALL_PATH, ZET_LOCAL_ENV_PATH, Settings
+from .settings import Settings
 
-settings = Settings(ZET_LOCAL_ENV_PATH)
+settings = Settings()
 
 
 def add_repo(zet_repo: str,
@@ -28,7 +28,7 @@ def add_repo(zet_repo: str,
     # and creation
     clean_zet_repo = zet_repo.replace(' ', '_')
     zet_repo_path = os.path.join(
-        zet_path if zet_path else ZET_INSTALL_PATH,
+        zet_path if zet_path else settings.install_path,
         clean_zet_repo
     )
     if not os.path.exists(zet_repo_path):

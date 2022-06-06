@@ -1,16 +1,14 @@
 import ast
 import datetime
 import fileinput
-import itertools
-import json
 import os
 import shutil
 import time
 from typing import Dict, List
 
-from .settings import ZET_LOCAL_ENV_PATH, Settings
+from .settings import Settings
 
-settings = Settings(ZET_LOCAL_ENV_PATH)
+settings = Settings()
 
 
 class ZetDoesNotExistException(Exception):

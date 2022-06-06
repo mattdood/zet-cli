@@ -1,9 +1,9 @@
 import os
 from subprocess import call
 
-from .settings import ZET_LOCAL_ENV_PATH, Settings
+from .settings import Settings
 
-settings = Settings(ZET_LOCAL_ENV_PATH)
+settings = Settings()
 
 
 def open_editor(path: str):

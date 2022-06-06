@@ -1,9 +1,9 @@
 import os
 from typing import List
 
-from .settings import ZET_LOCAL_ENV_PATH, Settings
+from .settings import Settings
 
-settings = Settings(ZET_LOCAL_ENV_PATH)
+settings = Settings()
 
 
 def list_zets(zet_repo: str = None, full_path: bool = False) -> List[str]:

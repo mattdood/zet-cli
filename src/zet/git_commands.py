@@ -1,8 +1,8 @@
 import subprocess
 
-from .settings import Settings, ZET_LOCAL_ENV_PATH
+from .settings import Settings
 
-settings = Settings(ZET_LOCAL_ENV_PATH)
+settings = Settings()
 
 
 def git_init_zets(zet_repo: str = None):
