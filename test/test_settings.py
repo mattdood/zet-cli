@@ -1,6 +1,16 @@
 import pytest
 
 
+def test_env_generates(zet_settings):
+    """Creates local settings.
+
+    We have to cleanup any other test
+    settings that may exist prior to
+    running this.
+    """
+    assert zet_settings.zet_local_env_path.exists()
+
+
 def test_settings_retrieval(zet_settings):
     default_settings = zet_settings.get_setting("defaults")
     assert isinstance(default_settings, dict)

@@ -8,8 +8,7 @@ from .create import Zet, bulk_import_zets
 from .editor_commands import open_editor
 from .git_commands import (git_add_zets, git_commit_zets, git_init_zets,
                            git_pull_zets, git_push_zets)
-from .list import list_zets
-from .repo import add_repo
+from .repo import Repo
 from .settings import Settings
 
 settings = Settings()
@@ -214,9 +213,11 @@ def main(argv: Optional[Sequence[str]] = None):
     elif args.which == "bulk":
         bulk_import_zets(files_folder=args.files_folder, zet_repo=args.zet_repo)
     elif args.which == "add_repo":
-        add_repo(zet_repo=args.zet_repo, zet_path=args.zet_path)
+        repos = Repo()
+        repos.add_repo(zet_repo=args.zet_repo, zet_path=args.zet_path)
     elif args.which == "list":
-        list_zets(zet_repo=args.zet_repo, full_path=args.full_path)
+        repos = Repo()
+        repos.list_zets(zet_repo=args.zet_repo, full_path=args.full_path)
     elif args.which == "init":
         git_init_zets(zet_repo=args.zet_repo)
     elif args.which == "add":

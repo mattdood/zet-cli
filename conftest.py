@@ -8,8 +8,7 @@ import pytest
 
 from src.zet.create import Zet
 from src.zet.git_commands import git_add_zets, git_init_zets
-from src.zet.list import list_zets
-from src.zet.repo import add_repo
+from src.zet.repo import Repo
 from src.zet.settings import Settings
 
 
@@ -18,7 +17,8 @@ def zet_settings(pytestconfig) -> Settings:
     # Setup
     # creates local settings
     settings = Settings()
-    add_repo("zets")
+    repos = Repo()
+    repos.add_repo("zets")
     yield settings.refresh()  # default repo name returned for subsequent
 
     # Teardown
@@ -55,7 +55,8 @@ def zet_list(zet_settings: Settings) -> List[str]:
             "some, tags",
             zet_settings.get_default_repo()
         )
-    sample_zets = list_zets(zet_settings.get_default_repo())
+    repos = Repo()
+    sample_zets = repos.list_zets(zet_settings.get_default_repo())
 
     return sample_zets
 
@@ -71,7 +72,8 @@ def zet_list_paths(zet_settings: Settings) -> List[str]:
             "some, tags",
             zet_settings.get_default_repo()
         )
-    sample_zets = list_zets(zet_settings.get_default_repo(), True)
+    repos = Repo()
+    sample_zets = repos.list_zets(zet_settings.get_default_repo(), True)
 
     return sample_zets
 

@@ -1,18 +1,18 @@
 import json
 import os
 
-from src.zet.repo import add_repo
+from src.zet.repo import Repo
 from src.zet.settings import ZET_INSTALL_PATH
 
 
-def test_env_generates(zet_settings):
-    """Creates local settings.
+def test_zets_exist_path(zet_settings, zet_list_paths):
+    assert all(os.path.exists(sample_zet) for sample_zet in zet_list_paths)
+    assert all(os.path.isfile(sample_zet) for sample_zet in zet_list_paths)
 
-    We have to cleanup any other test
-    settings that may exist prior to
-    running this.
-    """
-    assert zet_settings.zet_local_env_path.exists()
+
+def test_zets_name(zet_settings, zet_list):
+    assert all("/" not in sample_zet for sample_zet in zet_list)
+    assert all("\\" not in sample_zet for sample_zet in zet_list)
 
 
 def test_add_repo(zet_settings):
@@ -31,8 +31,9 @@ def test_add_repo(zet_settings):
     zet_other_repo = "some_other_repo"
     zet_other_path = os.path.join(zet_other, zet_other_repo)
 
-    add_repo(zet_repo)
-    add_repo(zet_other_repo, zet_other)
+    repos = Repo()
+    repos.add_repo(zet_repo)
+    repos.add_repo(zet_other_repo, zet_other)
     assert os.path.exists(zet_path)
     assert os.path.exists(zet_other_path)
 

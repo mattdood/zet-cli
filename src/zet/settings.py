@@ -30,6 +30,23 @@ class Settings:
     """
 
     def __init__(self, install_path: Path = ZET_INSTALL_PATH) -> None:
+        """Initializes all settings from a given `.local.json` file.
+
+        If the file does not exist it will be created from the
+        `.env/.example.json` file to initialize basic settings.
+
+        Users that already have a previous installation can copy
+        their existing file over the one that the installation
+        creates.
+
+        Params:
+            install_path (Path): Path to install the application
+                settings. This can be changed, really only for
+                testing. Defaults to `~/zets/`
+
+        Returns:
+            None
+        """
 
         self.zet_local_env_folder = install_path / ".env/"
         self.zet_local_env_path = self.zet_local_env_folder / ".local.json"
@@ -73,13 +90,28 @@ class Settings:
 
     @staticmethod
     def load_settings(path: Path) -> Dict:
-        """Load settings from the JSON file."""
+        """Load settings from the JSON file.
+
+        Params:
+            path (Path): Path to a settings file.
+
+        Returns:
+            data (Dict): Dictionary of all settings.
+        """
         with path.open("r") as file:
             data = json.load(file)
         return data
 
-    def get_setting(self, key: str = None):
-        """Fetches a block of settings."""
+    def get_setting(self, key: str = None) -> Dict:
+        """Fetches a block of settings.
+
+        Params:
+            key (str): A settings key to `.local.json`.
+
+        Returns:
+            settings (Dict): The top-level settings
+                for a key. Defaults to all settings.
+        """
         if key:
             return self.data[key]
         else:
@@ -152,6 +184,10 @@ class Settings:
         """Returns folder path of default repo."""
         return self.data["zet_repos"][self.data["defaults"]["repo"]]["folder"]
 
+    def get_templates(self) -> Dict:
+        """Returns all templates."""
+        return self.data["templates"]
+
     def get_default_template(self) -> str:
         """Returns the default template."""
         return self.data["defaults"]["template"]
@@ -161,19 +197,48 @@ class Settings:
         return self.data["templates"]["default"]
 
     def get_template_path(self, template_name: str) -> str:
-        """Returns the path of a template file."""
+        """Returns the path of a template file.
+
+        Params:
+            template_name (str): Name of a template file.
+
+        Returns:
+            path (str): The path to a template.
+        """
         return self.data["templates"][template_name]
 
     def get_repo_template_path(self, repo_name: str) -> str:
-        """Returns the path of a template file from a repo name."""
+        """Returns the path of a template file from a repo name.
+
+        Params:
+            repo_name (str): Name of a repository.
+
+        Returns:
+            path (str): The path to a template.
+        """
         return self.data["templates"][self.data["zet_repos"][repo_name]["template"]]
 
     def get_repo_path(self, repo_name: str) -> str:
+        """Returns a repo path from a repo name.
+
+        Params:
+            repo_name (str): Name of a repository.
+
+        Returns:
+            path (str): The path to a repository folder.
+        """
         return self.data["zet_repos"][repo_name]["folder"]
 
-    def get_repos(self) -> List[str]:
-        return [repo["folder"] for repo in self.data["zet_repos"]]
+    def get_repos(self) -> Dict:
+        """Returns all repos.
+
+        Returns:
+            repos (Dict): The settings for all
+                repositories.
+        """
+        return self.data["zet_repos"]
 
     def get_editor_command(self) -> str:
+        """Returns the command to open an editor."""
         return self.data["defaults"]["editor"]["command"]
 
