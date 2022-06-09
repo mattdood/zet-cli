@@ -6,6 +6,11 @@ from .settings import Settings
 settings = Settings()
 
 
+class RepoDoesNotExistException(Exception):
+    """Repository path does not exist."""
+    pass
+
+
 class Repo:
     """Representation of a notes repository.
 
@@ -73,6 +78,9 @@ class Repo:
 
         Returns:
             zets (List[str]): List of zets.
+
+        Raises:
+            RepoDoesNotExistException
         """
 
         if zet_repo:
@@ -83,6 +91,10 @@ class Repo:
 
         zet_list = []
         for repo in repos:
+
+            if not os.path.exists(repo):
+                raise RepoDoesNotExistException("Repo does not exist.")
+
             if full_path:
                 for root, dirs, files in os.walk(repo):
                     for file in files:

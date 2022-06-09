@@ -63,8 +63,11 @@ class Zet:
         Returns:
             metadata (Dict): A dictionary of the available
                 metadata in the file.
+
+        Raises:
+            ZetDoesNotExistException
         """
-        if self.path:
+        if self.path is not None and os.path.exists(self.path):
             metadata = {}
 
             # read a file line by line until we
