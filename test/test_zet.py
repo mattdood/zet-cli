@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from src.zet.create import Zet, bulk_import_zets
+from src.zet.zet import Zet, bulk_import_zets
 
 
 def test_zet_exists(zet_settings):

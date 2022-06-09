@@ -4,7 +4,7 @@ import sys
 import textwrap
 from typing import Optional, Sequence
 
-from .create import Zet, bulk_import_zets
+from .zet import Zet, bulk_import_zets
 from .editor_commands import open_editor
 from .git_commands import (git_add_zets, git_commit_zets, git_init_zets,
                            git_pull_zets, git_push_zets)

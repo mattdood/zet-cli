@@ -6,10 +6,10 @@ from typing import Dict, List, Union
 
 import pytest
 
-from src.zet.create import Zet
 from src.zet.git_commands import git_add_zets, git_init_zets
 from src.zet.repo import Repo
 from src.zet.settings import Settings
+from src.zet.zet import Zet
 
 
 @pytest.fixture(scope="module")
