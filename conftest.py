@@ -14,6 +14,12 @@ from src.zet.zet import Zet
 
 @pytest.fixture(scope="module")
 def zet_settings(pytestconfig) -> Settings:
+    """Test setup and teardown.
+
+    All functions need to import this fixture.
+    The settings are created and torn down properly
+    for each test that has this as a fixture.
+    """
     # Setup
     # creates local settings
     settings = Settings()
