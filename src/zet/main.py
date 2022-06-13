@@ -1,7 +1,7 @@
 """Zet tool's main execution."""
 import argparse
+import inspect
 import pprint
-import sys
 import textwrap
 from typing import Optional, Sequence
 
@@ -12,13 +12,20 @@ from .git_commands import (git_add_zets, git_commit_zets, git_init_zets,
 from .repo import Repo
 from .settings import Settings
 
+# Classes are instantiated to avoid
+# doing discovery with the `__qualname__` property
+# then instantiating them afterward. This is just easier.
+# See:
+#  * `__qualname__` - https://peps.python.org/pep-3155/
+#  * Classes from strs - https://stackoverflow.com/questions/1176136/convert-string-to-python-class-object
+# Note: None of these classes need args.
 FUNCTION_MAP = {
     # Zet commands
-    "create": Zet.create,
+    "create": Zet().create,
 
     # Repo commands
-    "list": Repo.list_zets,
-    "add_repo": Repo.add_repo,
+    "list": Repo().list_zets,
+    "add_repo": Repo().add_repo,
 
     # Git commands
     "add": git_add_zets,
@@ -34,7 +41,7 @@ FUNCTION_MAP = {
 settings = Settings()
 
 
-def main(argv: Optional[Sequence[str]] = None):
+def main(argv: Optional[Sequence[str]] = None) -> int:
     """
     TODO:
         * create should have choices for all repos in
@@ -48,27 +55,22 @@ def main(argv: Optional[Sequence[str]] = None):
         * help text should be much more helpful
     """
 
-
-    argv = argv if argv is not None else sys.argv[1:]
     parser = argparse.ArgumentParser(
         prog="zet",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=textwrap.dedent(f"""
-            Zettlekasten command line tools
+            Zettlekasten command line tools.
+
+            This tool creates, interacts with, and helps to
+            organize individual notes. A "zet" is seen as an
+            individual notes file that is stored in a "repo" (folder).
 
             Installation path: `~/zets/`
-            Default repo: `{settings.get_default_repo_path()}`
+            Default notes repo: `{settings.get_default_repo_path()}`
             Environment variables: `~/zets/.env/.local.json`
         """),
     )
-    parser.add_argument(
-        "-r",
-        "--zet_repo",
-        action="store",
-        default=settings.get_default_repo(),
-        help=f"A zet repo folder name. Defaults to {settings.get_default_repo_path()}",
-    )
-    subparsers = parser.add_subparsers(help="sub-command help")
+    subparsers = parser.add_subparsers(help="sub-command help", dest="command")
 
     parser_create = subparsers.add_parser("create", help="Creates a zet.")
     parser_create.add_argument(
@@ -102,6 +104,15 @@ def main(argv: Optional[Sequence[str]] = None):
         default=settings.get_default_template(),
         help="A zet template name. Defaults to ZET_DEFAULT_TEMPLATE."
     )
+    parser_create.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
+    )
     parser_create.set_defaults(which="create")
 
     parser_bulk = subparsers.add_parser("bulk", help="Bulk imports zets from a folder.")
@@ -113,6 +124,15 @@ def main(argv: Optional[Sequence[str]] = None):
         required=True,
         help="A folder of files to copy."
     )
+    parser_bulk.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
+    )
     parser_bulk.set_defaults(which="bulk")
 
     parser_add_repo = subparsers.add_parser("add_repo", help="Creates a zet repo.")
@@ -122,6 +142,15 @@ def main(argv: Optional[Sequence[str]] = None):
         action="store",
         default="~/zets/",
         help="A new zet folder path. Defaults to the `zets/` mono-folder."
+    )
+    parser_add_repo.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
     )
     parser_add_repo.set_defaults(which="add_repo")
 
@@ -133,13 +162,40 @@ def main(argv: Optional[Sequence[str]] = None):
         default=False,
         help="Full paths to zets. Defaults to false.",
     )
+    parser_list.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
+    )
     parser_list.set_defaults(which="list")
 
     parser_git_init = subparsers.add_parser("init", help="Git init inside folder.")
+    parser_git_init.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
+    )
     parser_git_init.set_defaults(which="init")
 
     parser_git_add = subparsers.add_parser(
         "add", help="Git add all zets inside folder."
+    )
+    parser_git_add.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
     )
     parser_git_add.set_defaults(which="add")
 
@@ -153,12 +209,39 @@ def main(argv: Optional[Sequence[str]] = None):
         default="",
         help="Commit message. Defaults to none."
     )
+    parser_git_commit.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
+    )
     parser_git_commit.set_defaults(which="commit")
 
     parser_git_push = subparsers.add_parser("push", help="Git push zets in folder.")
+    parser_git_push.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
+    )
     parser_git_push.set_defaults(which="push")
 
     parser_git_pull = subparsers.add_parser("pull", help="Git pull all zet repos from settings.")
+    parser_git_pull.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        default=settings.get_default_repo(),
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        This option is available for all sub-commands.
+        """,
+    )
     parser_git_pull.set_defaults(which="pull")
 
     parser_open_editor = subparsers.add_parser("editor", help="Open the editor to a repo.")
@@ -178,47 +261,33 @@ def main(argv: Optional[Sequence[str]] = None):
     )
     parser_open_editor.set_defaults(which="editor")
 
-    if len(argv) == 0:
-        argv = ["help"]
     args = parser.parse_args(argv)
-    print(args.__dict__)
-    print(type(args))
-
-    if args.which == "create":
-        zet = Zet()
-        zet.create(
-            title=args.title,
-            category=args.category,
-            tags=args.tags,
-            zet_repo=args.zet_repo,
-            template=args.template
-        )
-        open_editor(path=zet.path)
-    elif args.which == "bulk":
-        bulk_import_zets(files_folder=args.files_folder, zet_repo=args.zet_repo)
-    elif args.which == "add_repo":
-        repos = Repo()
-        repos.add_repo(zet_repo=args.zet_repo, zet_path=args.zet_path)
-    elif args.which == "list":
-        repos = Repo()
-        repos.list_zets(zet_repo=args.zet_repo, full_path=args.full_path)
-    elif args.which == "init":
-        git_init_zets(zet_repo=args.zet_repo)
-    elif args.which == "add":
-        git_add_zets(zet_repo=args.zet_repo)
-    elif args.which == "commit":
-        git_commit_zets(message=args.message, zet_repo=args.zet_repo)
-    elif args.which == "push":
-        git_push_zets(zet_repo=args.zet_repo)
-    elif args.which == "pull":
-        git_pull_zets()
-    elif args.which == "editor":
-        open_editor(path=args.path)
-    else:
-        print("Unknown command: ", args)
 
     pprint.pprint(vars(args))
+
+    if args.command:
+        # Map arg to command
+        func = FUNCTION_MAP[args.command]
+
+        # Filter argparse specific keys from
+        # argument values to only ones used
+        # in the function call.
+        # This could be done with `**_` as a "kwargs"
+        # placeholder in the function as well.
+        # Inspiration: https://stackoverflow.com/a/43238973/12387496
+        filtered_args = {}
+        func_params = [param.name for param in inspect.signature(func).parameters.values()]
+        for key, value in vars(args).items():
+            if key in func_params:
+                filtered_args[key] = value
+
+        func(**filtered_args)
+    else:
+        parser.print_help()
+
+    return 0
 
 
 if __name__ == "__main__":
     exit(main())
+
