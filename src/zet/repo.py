@@ -87,7 +87,7 @@ class Repo:
             repos = [settings.get_repo_path(zet_repo)]
         else:
             # all repos
-            repos = settings.get_repos()
+            repos = [repo["folder"] for repo in settings.get_repos()]
 
         zet_list = []
         for repo in repos:
