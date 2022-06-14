@@ -82,7 +82,7 @@ and concepts about modifying default command behavior.
 Creating new templates is typically a good idea if other file formats are required,
 or if there are fields in the default template that you would like to omit.
 
-Currently supported fields:
+**Currently supported fields:**
 ```
 path: 'templatePath'
 title: 'templateTitle'
@@ -90,6 +90,9 @@ date: 'templateDate'
 category: 'templateCategory'
 tags: templateTags
 ```
+
+The `templatePath` is useful for blogging, it has a less verbose structure
+than the folder layouts provided by the `zet create` option.
 
 ### Git commands
 The Zet-CLI offers wrappers around common Git commands to encourage
@@ -112,6 +115,8 @@ in a private Gist (if on GitHub) to better keep these installations "in sync".
 The application utilizes defaults to check for things like editors, reduce the
 need to specify a specific repo on every command, and determine a template to use
 for creating a zet file.
+
+**Note:** The default editor setting is [Neovim](https://neovim.io/).
 
 #### Repos
 The repos known to the CLI are referenced here. Repos can exist outside of the

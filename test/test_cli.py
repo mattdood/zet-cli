@@ -21,6 +21,7 @@ def test_entrypoint():
     assert exit_status == 0
 
 
+@pytest.mark.skip(reason="GitHub runners don't have neovim.")
 def test_create(zet_settings):
 
     main(['create', '-t', 'cli test', '-c', 'test', '-tag', 'test1, test2'])
