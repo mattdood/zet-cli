@@ -88,15 +88,18 @@ def git_push_zets(zet_repo: str = None):
     return subprocess.check_output(['git', 'push'], cwd = repo)
 
 
-def git_pull_zets() -> None:
+def git_pull_zets(zet_repo: str = None) -> None:
     """Pulls all changes for every repo.
 
     Params:
         folder (Dict[str, str]): A dictionary
             of zet folders. Defaults to ZET_FOLDERS.
     """
-    repos = settings.data["zet_repos"]
-    keys = list(repos.keys())
-    for key in keys:
-        subprocess.check_output(['git', 'pull'], cwd = repos[key]["folder"])
+    if zet_repo:
+        repo = settings.get_repo_path(zet_repo)
+    else:
+        # default repo
+        repo = settings.get_default_repo_path()
+
+    subprocess.check_output(['git', 'pull'], cwd = repo)
 
