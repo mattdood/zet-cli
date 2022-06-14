@@ -285,19 +285,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser_git_pull.set_defaults(which="pull")
 
     parser_open_editor = subparsers.add_parser("editor", help="Open the editor to a repo.")
-    parser_open_editor.add_argument(
-        "-p",
-        "--path",
+    parser_git_pull.add_argument(
+        "-r",
+        "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
-    )
-    parser_open_editor.add_argument(
-        "-e",
-        "--editor",
-        action="store",
-        default=settings.get_editor_command(),
-        help="A zet repo folder, must be in environment variables. Defaults to ZET_DEFAULT_FOLDER.",
+        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo()}.
+        This option is available for all sub-commands.
+        """,
     )
     parser_open_editor.set_defaults(which="editor")
 
