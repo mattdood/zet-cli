@@ -72,14 +72,31 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     subparsers = parser.add_subparsers(help="sub-command help", dest="command")
 
-    parser_create = subparsers.add_parser("create", help="Creates a zet.")
+    parser_create = subparsers.add_parser(
+        "create",
+        help="""Creates a zet file.
+
+        The file has "metadata" added into the template
+        based on the parameters passed to each argument.
+        """,
+    )
     parser_create.add_argument(
         "-t",
         "--title",
         action="store",
         type=str,
         required=True,
-        help="A zet title."
+        help=f"""A zet title.
+
+        Used to create a title in the file and
+        generate a unique filename using a timestamp
+        and hyphen (-) separated naming convention.
+
+        Timestamps are in `%Y%m%d%H%M%S` format.
+
+        Example:
+        `-t "some title"` becomes "some-title-20220102120051.md"
+        """
     )
     parser_create.add_argument(
         "-c",
@@ -95,14 +112,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         action="store",
         type=str,
         required=True,
-        help="A set of zet tags. Format is `str` but will be parsed from a comma separated list. Ex: `tag, tag, tag`."
+        help="""A set of zet tags. Format is `str` but will be
+        parsed from a comma separated list.
+
+        Example:
+        `-t 'tag, tag, tag'`
+        """
     )
     parser_create.add_argument(
         "-tem",
         "--template",
         action="store",
         default=settings.get_default_template(),
-        help="A zet template name. Defaults to ZET_DEFAULT_TEMPLATE."
+        help=f"A zet template name. Defaults to {settings.get_default_template()}."
     )
     parser_create.add_argument(
         "-r",
@@ -135,13 +157,32 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     parser_bulk.set_defaults(which="bulk")
 
-    parser_add_repo = subparsers.add_parser("add_repo", help="Creates a zet repo.")
+    parser_add_repo = subparsers.add_parser(
+        "add_repo",
+        help="""Creates a zet repo.
+
+        Repos are folders that store zets. Separate repos
+        are used to organize notes at a higher level than
+        categories/tags.
+
+        This could be useful for separating
+        things like general/personal notes from work-specific
+        knowledge.
+        """,
+    )
     parser_add_repo.add_argument(
         "-f",
         "--zet_path",
         action="store",
         default="~/zets/",
-        help="A new zet folder path. Defaults to the `zets/` mono-folder."
+        help="""A new zet folder path.
+
+        Defaults to the `~/zets/` installation directory.
+
+        Only use this if you need your zets to be stored separately
+        from where the installation directory is. Not advised for
+        general use, as it breaks the organization design of the tool.
+        """
     )
     parser_add_repo.add_argument(
         "-r",
@@ -173,7 +214,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     parser_list.set_defaults(which="list")
 
-    parser_git_init = subparsers.add_parser("init", help="Git init inside folder.")
+    parser_git_init = subparsers.add_parser("init", help="Git init inside a repo.")
     parser_git_init.add_argument(
         "-r",
         "--zet_repo",
@@ -186,7 +227,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser_git_init.set_defaults(which="init")
 
     parser_git_add = subparsers.add_parser(
-        "add", help="Git add all zets inside folder."
+        "add",
+        help="Git add all untracked zets inside a repo.",
     )
     parser_git_add.add_argument(
         "-r",
@@ -199,9 +241,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     parser_git_add.set_defaults(which="add")
 
-    parser_git_commit = subparsers.add_parser(
-        "commit", help="Git commit zets in folder."
-    )
+    parser_git_commit = subparsers.add_parser("commit", help="Git commit zets in a repo.")
     parser_git_commit.add_argument(
         "-m",
         "--message",
@@ -220,7 +260,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     parser_git_commit.set_defaults(which="commit")
 
-    parser_git_push = subparsers.add_parser("push", help="Git push zets in folder.")
+    parser_git_push = subparsers.add_parser("push", help="Git push zets in a repo.")
     parser_git_push.add_argument(
         "-r",
         "--zet_repo",
@@ -232,7 +272,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     parser_git_push.set_defaults(which="push")
 
-    parser_git_pull = subparsers.add_parser("pull", help="Git pull all zet repos from settings.")
+    parser_git_pull = subparsers.add_parser("pull", help="Git pull zet repo.")
     parser_git_pull.add_argument(
         "-r",
         "--zet_repo",
