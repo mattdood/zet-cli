@@ -75,7 +75,7 @@ class Zet:
             # this assumes we have a consistent delimeter
             with open(self.path, "r") as file:
                 delimeter = file.readline()
-                for line in file.readlines()[1:]:
+                for line in file.readlines()[0:]:
                     if line.startswith(delimeter):
                         break
                     else:
