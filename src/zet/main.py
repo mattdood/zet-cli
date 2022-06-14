@@ -21,7 +21,7 @@ from .zet import Zet, bulk_import_zets
 # Note: None of these classes need args.
 FUNCTION_MAP = {
     # Zet commands
-    "create": Zet().create,
+    "create": Zet.create,
 
     # Repo commands
     "list": Repo().list_zets,
@@ -364,7 +364,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         # for anything that has multiple function
         # calls outside the function map
         if args.command == "create":
-            zet = func(**filtered_args)
+            zet = Zet()
+            zet.create(**filtered_args)
             open_editor(path=zet.path)
         else:
             func(**filtered_args)
