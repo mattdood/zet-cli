@@ -188,6 +188,10 @@ class Settings:
         """Returns all templates."""
         return self.data["templates"]
 
+    def get_template_names(self) -> List[str]:
+        """Returns all template names."""
+        return self.data["templates"].keys()
+
     def get_default_template(self) -> str:
         """Returns the default template."""
         return self.data["defaults"]["template"]
@@ -237,6 +241,15 @@ class Settings:
                 repositories.
         """
         return self.data["zet_repos"]
+
+    def get_repo_names(self) -> List[str]:
+        """Returns all repo names.
+
+        Returns:
+            repos (List[str]): The settings for all
+                repository names.
+        """
+        return self.data["zet_repos"].keys()
 
     def get_editor_command(self) -> str:
         """Returns the command to open an editor."""

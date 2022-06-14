@@ -46,13 +46,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     TODO:
         * create should have choices for all repos in
             the config file
-        * create should have a list type for tags
         * list repos should have a choice of 1 or all
         * templates should have a list option for all template
             names with paths
         * there should be a pretty printer for all options
             that print things
-        * help text should be much more helpful
     """
 
     parser = argparse.ArgumentParser(
@@ -92,7 +90,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         generate a unique filename using a timestamp
         and hyphen (-) separated naming convention.
 
-        Timestamps are in `%Y%m%d%H%M%S` format.
+        Timestamps are in yyyyMMddHHmmS format.
 
         Example:
         `-t "some title"` becomes "some-title-20220102120051.md"
@@ -124,14 +122,23 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--template",
         action="store",
         default=settings.get_default_template(),
-        help=f"A zet template name. Defaults to {settings.get_default_template()}."
+        const=settings.get_default_template(),
+        nargs="?",
+        choices=settings.get_template_names(),
+        help=f"""A zet template name.
+
+        Defaults to "%(default)s".
+        """
     )
     parser_create.add_argument(
         "-r",
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -151,7 +158,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -171,6 +181,28 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         """,
     )
     parser_add_repo.add_argument(
+        "-r",
+        "--zet_repo",
+        action="store",
+        required=True,
+        default=settings.get_default_repo(),
+        help="A repo folder name."
+    )
+    parser_add_repo.add_argument(
+        "-tem",
+        "--template",
+        action="store",
+        default=settings.get_default_template(),
+        const=settings.get_default_template(),
+        nargs="?",
+        choices=settings.get_template_names(),
+        help=f"""Template to use in this repo.
+
+        Template to assign to the newly created repo.
+        Defaults to "%(default)s".
+        """
+    )
+    parser_add_repo.add_argument(
         "-f",
         "--zet_path",
         action="store",
@@ -183,15 +215,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         from where the installation directory is. Not advised for
         general use, as it breaks the organization design of the tool.
         """
-    )
-    parser_add_repo.add_argument(
-        "-r",
-        "--zet_repo",
-        action="store",
-        default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
-        This option is available for all sub-commands.
-        """,
     )
     parser_add_repo.set_defaults(which="add_repo")
 
@@ -208,7 +231,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -220,7 +246,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -235,7 +264,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -254,7 +286,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -266,7 +301,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -278,19 +316,25 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo_path()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
     parser_git_pull.set_defaults(which="pull")
 
     parser_open_editor = subparsers.add_parser("editor", help="Open the editor to a repo.")
-    parser_git_pull.add_argument(
+    parser_open_editor.add_argument(
         "-r",
         "--zet_repo",
         action="store",
         default=settings.get_default_repo(),
-        help=f"""A zet repo folder name. Defaults to {settings.get_default_repo()}.
+        const=settings.get_default_repo(),
+        nargs="?",
+        choices=settings.get_repo_names(),
+        help=f"""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
