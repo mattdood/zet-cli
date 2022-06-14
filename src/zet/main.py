@@ -316,7 +316,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             if key in func_params:
                 filtered_args[key] = value
 
-        func(**filtered_args)
+        # Edge case handling
+        # for anything that has multiple function
+        # calls outside the function map
+        if args.command == "create":
+            zet = func(**filtered_args)
+            open_editor(path=zet.path)
+        else:
+            func(**filtered_args)
+
     else:
         parser.print_help()
 
