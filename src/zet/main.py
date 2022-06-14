@@ -5,12 +5,12 @@ import pprint
 import textwrap
 from typing import Optional, Sequence
 
-from .zet import Zet, bulk_import_zets
 from .editor_commands import open_editor
 from .git_commands import (git_add_zets, git_commit_zets, git_init_zets,
                            git_pull_zets, git_push_zets)
 from .repo import Repo
 from .settings import Settings
+from .zet import Zet, bulk_import_zets
 
 # Classes are instantiated to avoid
 # doing discovery with the `__qualname__` property
@@ -84,7 +84,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         action="store",
         type=str,
         required=True,
-        help=f"""A zet title.
+        help="""A zet title.
 
         Used to create a title in the file and
         generate a unique filename using a timestamp
@@ -125,7 +125,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_template(),
         nargs="?",
         choices=settings.get_template_names(),
-        help=f"""A zet template name.
+        help="""A zet template name.
 
         Defaults to "%(default)s".
         """
@@ -138,7 +138,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -161,7 +161,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -196,7 +196,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_template(),
         nargs="?",
         choices=settings.get_template_names(),
-        help=f"""Template to use in this repo.
+        help="""Template to use in this repo.
 
         Template to assign to the newly created repo.
         Defaults to "%(default)s".
@@ -234,7 +234,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -249,7 +249,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -267,7 +267,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -289,7 +289,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -304,7 +304,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -319,7 +319,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
@@ -334,7 +334,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         const=settings.get_default_repo(),
         nargs="?",
         choices=settings.get_repo_names(),
-        help=f"""A zet repo folder name. Defaults to "%(default)s".
+        help="""A zet repo folder name. Defaults to "%(default)s".
         This option is available for all sub-commands.
         """,
     )
