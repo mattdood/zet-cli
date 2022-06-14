@@ -59,8 +59,8 @@ above sample, the file would have the following information:
 ```
 ---
 path: '/2022/6/sample-title-20220601120100'
-title: sample title
-category: sample
+title: 'sample title'
+category: 'sample'
 tags: ['test', 'test1']
 ---
 ```
@@ -78,6 +78,18 @@ then added to the settings file with a path that points to that template.
 
 The settings section goes into greater detail regarding things like defaults
 and concepts about modifying default command behavior.
+
+Creating new templates is typically a good idea if other file formats are required,
+or if there are fields in the default template that you would like to omit.
+
+Currently supported fields:
+```
+path: 'templatePath'
+title: 'templateTitle'
+date: 'templateDate'
+category: 'templateCategory'
+tags: templateTags
+```
 
 ### Git commands
 The Zet-CLI offers wrappers around common Git commands to encourage
@@ -105,16 +117,34 @@ for creating a zet file.
 The repos known to the CLI are referenced here. Repos can exist outside of the
 installation directory (`~/zets/`)
 
-### Templates
+Default template names can be altered within the repo record in the settings file.
+There is not a CLI option for this.
+
+#### Templates
 Templates are used as a base form when creating a new zet. These are copied
 and renamed in-place when creating a directory to hold a new zet file. To create
 your own templates, utilize the same delimeter pattern (`---`) then place your
 corresponding data keys into the file.
 
 These templates do not have to live inside the installation pathway; however,
-for organization it is encouraged.
+for organization it is encouraged. A good idea would be to create a `templates/`
+directory inside of the environment variables folder (`.env/templates/`).
 
 Templates are referenced by name from the settings file, if you prefer a new default
 template then simply change the `defaults` section of the settings file to reference
 the name of your new template.
+
+When a template is added to the settings file it will become available in the
+CLI for creating zets.
+
+**Note:** All templates need their full directory listed in settings. This should
+include an absolute reference.
+
+Example:
+```
+"templates": {
+    "default": ...,
+    "my_template": "~/zets/.env/templates/my-template.md"
+}
+```
 
