@@ -25,7 +25,7 @@ def zet_settings(pytestconfig) -> Settings:
     settings = Settings()
     repos = Repo()
     repos.add_repo("zets")
-    yield settings.refresh()  # default repo name returned for subsequent
+    yield settings.refresh()  # default repo name returned for subsequent invocations
 
     # Teardown
     scratch_repo_one = "other/"
@@ -33,6 +33,9 @@ def zet_settings(pytestconfig) -> Settings:
     workspace = pytestconfig.rootdir / "~"
     if workspace.exists():
         shutil.rmtree(workspace)
+
+    if settings.install_path.exists():
+        shutil.rmtree(settings.install_path)
 
     if os.path.exists(scratch_repo_one):
         shutil.rmtree(scratch_repo_one)

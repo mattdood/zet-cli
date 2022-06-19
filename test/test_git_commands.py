@@ -26,8 +26,8 @@ def test_git_commit_zets(zet_settings, zet_git_repo_changes):
 
 
 @pytest.mark.skip(reason="No way of testing, fails on git_push, pre-assertion")
-def test_git_push_zets(zet_repo_changes):
-    git_push = git_push_zets("test_repo", zet_repo_changes)
+def test_git_push_zets(zet_settings, zet_repo_changes):
+    git_push = git_push_zets(zet_settings.get_default_repo())
     assert "non-zero exit code" in str(git_push)
     assert "No configured push destination." in str(git_push)
 

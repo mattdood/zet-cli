@@ -44,8 +44,6 @@ settings = Settings()
 def main(argv: Optional[Sequence[str]] = None) -> int:
     """
     TODO:
-        * create should have choices for all repos in
-            the config file
         * list repos should have a choice of 1 or all
         * templates should have a list option for all template
             names with paths
