@@ -12,7 +12,7 @@
     },
     "zet_repos": {
         "zets": {
-            "folder": "~/zets/zets/",
+            "folder": "",
             "template": "default"
         }
     }
