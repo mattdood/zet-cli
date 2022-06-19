@@ -43,5 +43,5 @@ jobs:
           git config --global user.email "test@zet-cli.test"
 
       - name: Run tests
-        run: pytest -vv -s
+        run: ZET_STAGE=test pytest -vv -s
 
