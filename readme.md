@@ -153,3 +153,15 @@ Example:
 }
 ```
 
+## Running tests
+To run the test suite we need to tell the settings to use a different installation
+location or we'll run into clashing with any other installations. This could
+result in deleting your note repos, settings, etc.
+
+Running the test suite with a `ZET_STAGE=test` will ensure the installation
+pathway of the test objects is inside the project, where teardown can safely take place.
+
+```bash
+ZET_STAGE=test pytest -vv -s
+```
+
