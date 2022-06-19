@@ -7,7 +7,12 @@ from typing import Dict, List
 # Project install defaults
 ZET_PROJECT = Path(__file__)
 ZET_HOME = ZET_PROJECT.parents[2]
-ZET_INSTALL_PATH = Path("~/zets/")
+
+# Check env stage (test)
+if os.environ.get("ZET_STAGE") == "test":
+    ZET_INSTALL_PATH = ZET_HOME / "zet/"
+else:
+    ZET_INSTALL_PATH = Path.home() / "zet/"
 
 
 class Settings:
@@ -59,11 +64,16 @@ class Settings:
         self.install_path = install_path
         self.data = self.load_settings(self.zet_local_env_path)
 
-        # after initial setup the template needs
-        # to have a path discovery, then add it to the config
+        # after initial setup the template and default repo need
+        # to have a path discovery, then add them to the config
         if self.data["templates"]["default"] == "":
             keys = ["templates", "default"]
             value = ZET_HOME / "src/zet/templates/readme.md"
+            self.update_setting(keys, value.as_posix())
+
+        if self.data["zet_repos"]["zets"]["folder"] == "":
+            keys = ["zet_repos", "zets", "folder"]
+            value = ZET_INSTALL_PATH / "zets"
             self.update_setting(keys, value.as_posix())
 
     def refresh(self):
@@ -156,6 +166,11 @@ class Settings:
         json.dump(data, settings_file, indent=4)
         settings_file.close()
 
+        # If settings are still used after updating
+        # we need to refresh it or they won't be
+        # recognized
+        self.refresh()
+
     def append_setting(self, key: str, value) -> None:
         """Adds a new entry to a setting.
 
@@ -187,6 +202,10 @@ class Settings:
     def get_templates(self) -> Dict:
         """Returns all templates."""
         return self.data["templates"]
+
+    def get_template_names(self) -> List[str]:
+        """Returns all template names."""
+        return self.data["templates"].keys()
 
     def get_default_template(self) -> str:
         """Returns the default template."""
@@ -237,6 +256,15 @@ class Settings:
                 repositories.
         """
         return self.data["zet_repos"]
+
+    def get_repo_names(self) -> List[str]:
+        """Returns all repo names.
+
+        Returns:
+            repos (List[str]): The settings for all
+                repository names.
+        """
+        return self.data["zet_repos"].keys()
 
     def get_editor_command(self) -> str:
         """Returns the command to open an editor."""

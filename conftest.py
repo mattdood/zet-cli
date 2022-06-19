@@ -6,20 +6,26 @@ from typing import Dict, List, Union
 
 import pytest
 
-from src.zet.create import Zet
 from src.zet.git_commands import git_add_zets, git_init_zets
 from src.zet.repo import Repo
 from src.zet.settings import Settings
+from src.zet.zet import Zet
 
 
 @pytest.fixture(scope="module")
 def zet_settings(pytestconfig) -> Settings:
+    """Test setup and teardown.
+
+    All functions need to import this fixture.
+    The settings are created and torn down properly
+    for each test that has this as a fixture.
+    """
     # Setup
     # creates local settings
     settings = Settings()
     repos = Repo()
     repos.add_repo("zets")
-    yield settings.refresh()  # default repo name returned for subsequent
+    yield settings.refresh()  # default repo name returned for subsequent invocations
 
     # Teardown
     scratch_repo_one = "other/"
@@ -27,6 +33,9 @@ def zet_settings(pytestconfig) -> Settings:
     workspace = pytestconfig.rootdir / "~"
     if workspace.exists():
         shutil.rmtree(workspace)
+
+    if settings.install_path.exists():
+        shutil.rmtree(settings.install_path)
 
     if os.path.exists(scratch_repo_one):
         shutil.rmtree(scratch_repo_one)
