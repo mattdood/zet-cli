@@ -38,12 +38,16 @@ def test_settings_update_key_refresh(zet_settings):
     Ensures that we can refresh the object
     state from the JSON file if it is changed
     during the program's call stack.
+
+    We test both the refresh and settings update
+    function in one go, because we're calling refresh
+    inside the update.
     """
 
     keys = ["defaults", "editor", "name"]
     value = "vscode"
     zet_settings.update_setting(keys, value)
-    assert value != zet_settings.get_setting("defaults")["editor"]["name"]
+    assert value == zet_settings.get_setting("defaults")["editor"]["name"]
 
     check_settings = zet_settings.refresh().get_setting("defaults")
     assert value == check_settings["editor"]["name"]
