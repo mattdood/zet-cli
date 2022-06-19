@@ -63,6 +63,8 @@ title: 'sample title'
 category: 'sample'
 tags: ['test', 'test1']
 ---
+
+# sample title
 ```
 
 ### Templates
