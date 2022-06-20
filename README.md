@@ -180,3 +180,29 @@ pathway of the test objects is inside the project, where teardown can safely tak
 ZET_STAGE=test pytest -vv -s
 ```
 
+## Releasing builds
+To release builds for the project we use a combination of tagging and changes to
+`setup.py`.
+
+For any releases to `test.pypi.org` use a change to the `version="..."` inside of
+`setup.py`. Once a PR is merged into the main project the test release will be updated.
+
+Any prod releases to `pypi.org` require a tagged version number. This should be done locally
+by running the following:
+
+```bash
+git checkout master
+git pull master
+git tag v<version-number-here>
+git push origin v<version-number-here>
+```
+
+### Rollbacks of versions
+To roll a version back we need to delete the tagged release from the prod PyPI,
+then delete the GitHub tag.
+
+```
+git tag -d v<version-number-here>
+git push origin :v<version-number-here>
+```
+
