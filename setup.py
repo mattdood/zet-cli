@@ -23,7 +23,7 @@ setuptools.setup(
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     entry_points={
-        "console_scripts": ["zet=zet:main"]
+        "console_scripts": ["zet=main:main"]
     },
     python_requires=">=3.6",
 )
