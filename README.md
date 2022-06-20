@@ -1,15 +1,28 @@
 # Zet CLI
 A Zettlekasten helper utility.
 
+<img src="https://img.shields.io/github/issues/mattdood/zet-cli"
+    target="https://github.com/mattdood/graph-ein/issues"
+    alt="Badge for GitHub issues."/>
+<img src="https://img.shields.io/github/forks/mattdood/zet-cli"
+    target="https://github.com/mattdood/zet-cli/forks"
+    alt="Badge for GitHub forks."/>
+<img src="https://img.shields.io/github/stars/mattdood/zet-cli"
+    alt="Badge for GitHub stars."/>
+<img src="https://img.shields.io/github/license/mattdood/zet-cli"
+    target="https://github.com/mattdood/zet-cli/raw/master/LICENSE"
+    alt="Badge for GitHub license, MIT."/>
+<img src="https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fmattdood%2Fzet-cli"
+    target="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fmattdood%2Fzet-cli"
+    alt="Badge for sharable Twitter link."/>
+[![Pytest](https://github.com/mattdood/zet-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mattdood/zet-cli/actions/workflows/ci.yml)
+
+
 ## Installation
-1. Clone the repository
+To install the project, run the following:
+
 ```
-git clone https://github.com/mattdood/zet-cli.git zet-cli
-```
-1. Install the cloned repository via pip from the cloned folder
-```
-cd path/to/install
-python3 -m pip install -e zet-cli
+pip install zet-cli
 ```
 
 ## Usage
