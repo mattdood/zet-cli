@@ -28,6 +28,16 @@ class Zet:
     def __init__(self, path: str = None) -> None:
         self.path = path
 
+        # discover repo name rather than keep it in
+        # metadata because files could be moved, avoids
+        # user having to change a hardcoded value
+        if self.path:
+            repos = settings.get_repos()
+            for repo in repos.keys():
+                if self.path.startswith(repos[repo]["folder"]):
+                    self.repo_name = repo
+                    break
+
     @property
     def metadata(self) -> Dict:
         """Get file metadata.
@@ -100,6 +110,45 @@ class Zet:
         else:
             raise ZetDoesNotExistException("Zet does not exist")
 
+    def add_link(self, link_path: str) -> None:
+        """Add link to the zet file.
+
+        Links are stored as a list, similar to tags.
+
+        Params:
+            link_path (str): A link (filepath) to add.
+
+        Returns:
+            None
+        """
+
+        for line in fileinput.input(self.path, inplace=True):
+            if line.startswith("links"):
+                name, value = line.partition(": ")[::2]
+                value_list = ast.literal_eval(value.rstrip())
+                value_list.append(link_path)
+                print(f"links: {value_list}")
+            else:
+                print(line, end="")
+
+    def delete_link(self, link_path: str) -> None:
+        """Remove a link from the zet file.
+
+        Params:
+            link_path (str): A link (filepath) to remove.
+
+        Returns:
+            None
+        """
+        for line in fileinput.input(self.path, inplace=True):
+            if line.startswith("links"):
+                name, value = line.partition(": ")[::2]
+                value_list = ast.literal_eval(value.rstrip())
+                value_list.remove(link_path)
+                print(f"links: {value_list}")
+            else:
+                print(line, end="")
+
     def create(self,
                title: str,
                category: str,
@@ -149,7 +198,8 @@ class Zet:
             ["templateTitle", str(title)],
             ["templateCleanTitle", str(clean_title)],
             ["templateCategory", str(category)],
-            ["templateTags", str(tags_list)]
+            ["templateTags", str(tags_list)],
+            ["templateLinks", str([])],
         ]
 
         if not os.path.exists(full_path):
@@ -168,6 +218,9 @@ class Zet:
             for line in fileinput.input(new_file, inplace=True):
                 for item in metadata:
                     line = line.replace(item[0], item[1])
+
+                # don't delete, it does the line replacement
+                print(line, end="")
 
                 # line = re.sub(r"/{({word_match}*)}/".format(word_match=item[0]), item[1], line)
             fileinput.close()
