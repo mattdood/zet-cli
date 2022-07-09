@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Optional
 
 from .settings import Settings
 
@@ -22,8 +22,12 @@ class Repo:
     That is left up to the user.
     """
 
-    def __init__(self) -> None:
-        self.repos = settings.get_repos()
+    def __init__(self, repo_name: Optional[str] = None) -> None:
+        if repo_name:
+            self.repo_path =  settings.get_repo_path(repo_name)
+        else:
+            self.repo_path = settings.get_default_repo_path()
+        self.repo_name = repo_name if repo_name else settings.get_default_repo()
 
     def add_repo(self,
                  zet_repo: str,
@@ -83,27 +87,22 @@ class Repo:
             RepoDoesNotExistException
         """
 
-        if zet_repo:
-            repos = [settings.get_repo_path(zet_repo)]
-        else:
-            # all repos
-            repos = [repo["folder"] for repo in settings.get_repos()]
+        if zet_repo is None:
+            zet_repo = self.repo_path
 
         zet_list = []
-        for repo in repos:
+        if not os.path.exists(zet_repo):
+            raise RepoDoesNotExistException("Repo does not exist.")
 
-            if not os.path.exists(repo):
-                raise RepoDoesNotExistException("Repo does not exist.")
-
-            if full_path:
-                for root, dirs, files in os.walk(repo):
-                    for file in files:
-                        full_file_path = os.path.join(root, file)
-                        zet_list.append(full_file_path)
-            else:
-                for root, dirs, files in os.walk(repo):
-                    for file in files:
-                        zet_list.append(file)
+        if full_path:
+            for root, dirs, files in os.walk(zet_repo):
+                for file in files:
+                    full_file_path = os.path.join(root, file)
+                    zet_list.append(full_file_path)
+        else:
+            for root, dirs, files in os.walk(zet_repo):
+                for file in files:
+                    zet_list.append(file)
 
         return zet_list
 
