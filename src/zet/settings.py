@@ -248,6 +248,10 @@ class Settings:
         """
         return self.data["zet_repos"][repo_name]["folder"]
 
+    def get_repo_paths(self) -> List[str]:
+        """Returns all repo folders."""
+        return [repo["folder"] for repo in self.data["zet_repos"]]
+
     def get_repos(self) -> Dict:
         """Returns all repos.
 
