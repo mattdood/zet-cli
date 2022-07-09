@@ -16,7 +16,7 @@ A Zettlekasten helper utility.
     target="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fmattdood%2Fzet-cli"
     alt="Badge for sharable Twitter link."/>
 [![Pytest](https://github.com/mattdood/zet-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mattdood/zet-cli/actions/workflows/ci.yml)
-
+[![PyPI version](https://badge.fury.io/py/zet-cli.svg)](https://badge.fury.io/py/zet-cli)
 
 ## Installation
 To install the project, run the following:
