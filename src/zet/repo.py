@@ -24,7 +24,7 @@ class Repo:
 
     def __init__(self, repo_name: Optional[str] = None) -> None:
         if repo_name:
-            self.repo_path =  settings.get_repo_path(repo_name)
+            self.repo_path = settings.get_repo_path(repo_name)
         else:
             self.repo_path = settings.get_default_repo_path()
 

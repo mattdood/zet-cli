@@ -53,7 +53,7 @@ class Db:
         repos = [Repo(repo_path) for repo_path in settings.get_repo_names()]
 
         # all zets
-        zets =  []
+        zets = []
         for repo in repos:
             # add schema for repo
             self.db.add_schema(repo.repo_name)
