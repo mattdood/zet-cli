@@ -27,6 +27,7 @@ class Repo:
             self.repo_path =  settings.get_repo_path(repo_name)
         else:
             self.repo_path = settings.get_default_repo_path()
+
         self.repo_name = repo_name if repo_name else settings.get_default_repo()
 
     def add_repo(self,
