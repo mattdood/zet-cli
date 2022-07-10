@@ -14,6 +14,7 @@ def test_db_creates(zet_settings):
 
 def test_db_sync(zet_settings):
     db = Db()
+
     zet_one = Zet()
     zet_one.create(
         "some title",
@@ -34,4 +35,11 @@ def test_db_sync(zet_settings):
     db.sync_db()
     assert len(db.db.edges) == 1
     assert len(db.db.nodes) == 2
+
+    # check data persists
+    db_two = Db()
+    assert len(db_two.db.edges) == 1
+    assert len(db_two.db.nodes) == 2
+
+
 
