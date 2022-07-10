@@ -50,17 +50,26 @@ class Db:
             self.db = Graph(db_path=self.db_path.as_posix())
 
         # all repos
-        repos = [Repo(repo_path) for repo_path in settings.get_repo_paths()]
+        repos = [Repo(repo_path) for repo_path in settings.get_repo_names()]
 
         # all zets
         zets =  []
         for repo in repos:
+            # add schema for repo
+            self.db.add_schema(repo.repo_name)
+
             nodes = []
             edges = []
-            zets += [Zet(zet_path) for zet_path in repo.list_zets(full_path=True)]
-            nodes.append([self._construct_node(zet) for zet in zets])
-            edges += [self._construct_edges(zet) for zet in zets]
 
+            # get all nodes
+            zets += [Zet(zet_path) for zet_path in repo.list_zets(full_path=True)]
+
+            # create nodes and edges for each zet
+            nodes += [self._construct_node(zet) for zet in zets]
+            for zet in zets:
+                edges += self._construct_edges(zet)
+
+            # add to DB for the repo
             self.db.add_nodes(schema_name=repo.repo_name, nodes=nodes)
             self.db.add_edges(schema_name=repo.repo_name, edges=edges)
 
@@ -73,9 +82,6 @@ class Db:
         Returns:
             node (Node): A node representation of a zet.
         """
-
-        # links don't need to be in Node obj.
-        zet.metadata.pop("links", None)
         return Node(schema_name=zet.repo_name, id=zet.path, body=zet.metadata)
 
     def _construct_edges(self, zet: Zet) -> Union[List[Edge], List]:
@@ -94,18 +100,19 @@ class Db:
         # source node links
         links = zet.metadata.pop("links", None)
         if links:
+
+            # source node data
             source_node_body = zet.metadata
             source_node = Node(schema_name=zet.repo_name, id=zet.path, body=source_node_body)
 
+            # get target nodes of each link
             for link in links:
                 target_zet = Zet(path=link)
-
-                # don't need links
-                target_zet.metadata.pop("links", None)
-
                 target_node_body = target_zet.metadata
                 target_node = Node(schema_name=target_zet.repo_name, id=target_zet.path, body=target_node_body)
+
                 edges.append(Edge(schema_name=source_node.schema_name, source=source_node, target=target_node))
+
         return edges
 
     def add_zet(self) -> None:
