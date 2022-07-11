@@ -96,14 +96,18 @@ class Repo:
             raise RepoDoesNotExistException("Repo does not exist.")
 
         if full_path:
-            for root, dirs, files in os.walk(zet_repo):
+            for root, dirs, files in os.walk(zet_repo, topdown=True):
+                # exclude .git folder from the results
+                dirs[:] = [d for d in dirs if d not in {".git",}]
                 for file in files:
-                    full_file_path = os.path.join(root, file)
-                    zet_list.append(full_file_path)
+                    if not file.endswith((".png", ".gif", ".jpg")):
+                        full_file_path = os.path.join(root, file)
+                        zet_list.append(full_file_path)
         else:
             for root, dirs, files in os.walk(zet_repo):
                 for file in files:
-                    zet_list.append(file)
+                    if not file.endswith((".png", ".gif", ".jpg")):
+                        zet_list.append(file)
 
         return zet_list
 
