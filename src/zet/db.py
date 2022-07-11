@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 from typing import List, Union
 
@@ -42,10 +43,14 @@ class Db:
         or deletions to avoid complexity. It's often easier to just recreate
         the DB from scratch.
         """
+        # db creation start time
+        start_time = time.perf_counter()
+
         # removes current DB path then recreates it
         # this is to start fresh on any new data that was
         # added to the DB or changed
         if self.db_path.exists():
+
             self.db_path.unlink()
             self.db = Graph(db_path=self.db_path.as_posix())
 
@@ -72,6 +77,10 @@ class Db:
             # add to DB for the repo
             self.db.add_nodes(schema_name=repo.repo_name, nodes=nodes)
             self.db.add_edges(schema_name=repo.repo_name, edges=edges)
+
+        # db creation end time
+        end_time = time.perf_counter()
+        print(f"Created database in {end_time - start_time:0.4f} seconds")
 
     def _construct_node(self, zet: Zet) -> Node:
         """Node constructor for the graph database.
