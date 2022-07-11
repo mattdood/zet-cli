@@ -23,8 +23,8 @@ def zet_settings(pytestconfig) -> Settings:
     # Setup
     # creates local settings
     settings = Settings()
-    repos = Repo()
-    repos.add_repo("zets")
+    repo = Repo()
+    repo.add_repo("zets")
     yield settings.refresh()  # default repo name returned for subsequent invocations
 
     # Teardown
@@ -65,7 +65,7 @@ def zet_list(zet_settings: Settings) -> List[str]:
             zet_settings.get_default_repo()
         )
     repos = Repo()
-    sample_zets = repos.list_zets(zet_settings.get_default_repo())
+    sample_zets = repos.list_zets()
 
     return sample_zets
 
@@ -81,8 +81,8 @@ def zet_list_paths(zet_settings: Settings) -> List[str]:
             "some, tags",
             zet_settings.get_default_repo()
         )
-    repos = Repo()
-    sample_zets = repos.list_zets(zet_settings.get_default_repo(), True)
+    repo = Repo()
+    sample_zets = repo.list_zets(full_path=True)
 
     return sample_zets
 

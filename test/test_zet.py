@@ -24,7 +24,6 @@ def test_zet_metadata_on_create(zet_settings):
         tags="some, tags"
     )
     new_zet = Zet(zet.path)
-    print("test", new_zet.metadata)
     assert new_zet.metadata["title"] == "some title"
     assert new_zet.metadata["category"] == "some category"
     assert new_zet.metadata["tags"] == ["some", "tags"]
