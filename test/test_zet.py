@@ -16,16 +16,33 @@ def test_zet_exists(zet_settings):
     assert os.path.exists(new_zet.path)
 
 
-def test_zet_metadata(zet_settings):
+def test_zet_metadata_on_create(zet_settings):
     zet = Zet()
     zet.create(
         title="some title",
         category="some category",
         tags="some, tags"
     )
-    assert zet.metadata["title"] == "some title"
-    assert zet.metadata["category"] == "some category"
-    assert zet.metadata["tags"] == ["some", "tags"]
+    new_zet = Zet(zet.path)
+    assert new_zet.metadata["title"] == "some title"
+    assert new_zet.metadata["category"] == "some category"
+    assert new_zet.metadata["tags"] == ["some", "tags"]
+    assert new_zet.metadata["links"] == []
+    assert new_zet.repo_name == "zets"
+
+
+def test_zet_add_delete_link(zet_settings):
+    zet = Zet()
+    zet.create(
+        title="some title",
+        category="some category",
+        tags="some, tags"
+    )
+    zet.add_link("something.md")
+    assert zet.metadata["links"] == ["something.md"]
+
+    zet.delete_link("something.md")
+    assert zet.metadata["links"] == []
 
 
 def test_unique_zets(zet_settings):
