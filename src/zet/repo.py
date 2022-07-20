@@ -11,6 +11,11 @@ class RepoDoesNotExistException(Exception):
     pass
 
 
+class RepoAlreadyExistsException(Exception):
+    """Repository path does not exist."""
+    pass
+
+
 class Repo:
     """Representation of a notes repository.
 
@@ -59,6 +64,8 @@ class Repo:
         )
         if not os.path.exists(zet_repo_path):
             os.makedirs(zet_repo_path)
+        else:
+            raise RepoAlreadyExistsException(f"A repo already exists with that name: {clean_zet_repo}")
 
         # settings repo update with new
         # folder that was just created
