@@ -46,6 +46,13 @@ to be stored in the folder created specifically for that note. This
 allows local references within the Markdown file and helps with
 organization when repos contain many zets.
 
+#### Linking notes
+A zet can be linked to another by adding the file path of the originating
+note to the "links" metadata list.
+
+The full file path is used to enforce edge relationships in search and linking,
+ensuring that the correct note is used for search references.
+
 ### Repos (Storage)
 Each zet file is stored in a date-time folder hierarchy.
 Example execution:
@@ -104,6 +111,7 @@ title: 'templateTitle'
 date: 'templateDate'
 category: 'templateCategory'
 tags: templateTags
+links: templateLinks
 ```
 
 The `templatePath` is useful for blogging, it has a less verbose structure
@@ -167,6 +175,25 @@ Example:
     "my_template": "~/zets/.env/templates/my-template.md"
 }
 ```
+
+### Database
+The zets database (`~/zets/.env/zets.db`) is a SQLite database that stores a representation
+of all note metadata. This is accomplished by using [Graph-Ein](https://github.com/mattdood/graph-ein)
+to store a JSON representation of each zet as `Node` and `Edge` records in relational
+tables.
+
+Interaction with this is done via the `Graph` object, an instance variable of the `Db`
+object.
+
+Using this allows for a quick graph-based search of data without having to parse every
+file for each search.
+
+The user isn't encouraged to look at the data directly, but it can be accomplished
+using a database tool like [DBeaver](https://dbeaver.io).
+
+**Note:** Each repository has a separate set of node/edge tables, but links between
+notes can be cross-repository. The originating zet is considered the source node,
+which ensures the edge record is stored in that source node's set of tables.
 
 ## Running tests
 To run the test suite we need to tell the settings to use a different installation

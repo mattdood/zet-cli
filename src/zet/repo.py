@@ -11,6 +11,11 @@ class RepoDoesNotExistException(Exception):
     pass
 
 
+class RepoAlreadyExistsException(Exception):
+    """Repository path does not exist."""
+    pass
+
+
 class Repo:
     """Representation of a notes repository.
 
@@ -36,6 +41,9 @@ class Repo:
                  template: str = None) -> None:
         """Adds a new repo (folder) and appends to the env file.
 
+        TODO:
+            * Pytest Assert raises for the new exception already exists
+
         Params:
             zet_repo (str): A zet repo name to
                 append to an existing env file.
@@ -59,6 +67,8 @@ class Repo:
         )
         if not os.path.exists(zet_repo_path):
             os.makedirs(zet_repo_path)
+        else:
+            raise RepoAlreadyExistsException(f"A repo already exists with that name: {clean_zet_repo}")
 
         # settings repo update with new
         # folder that was just created

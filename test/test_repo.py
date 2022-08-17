@@ -57,3 +57,7 @@ def test_add_repo(zet_settings):
         assert zet_repo_setting[zet_repo] == zet_env[zet_repo]
         assert zet_other_repo_setting[zet_other_repo] == zet_env[zet_other_repo]
 
+    # TODO:
+    # * Pytest Assert raises for the new exception already exists
+
+
