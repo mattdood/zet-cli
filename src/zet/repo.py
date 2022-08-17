@@ -41,6 +41,9 @@ class Repo:
                  template: str = None) -> None:
         """Adds a new repo (folder) and appends to the env file.
 
+        TODO:
+            * Pytest Assert raises for the new exception already exists
+
         Params:
             zet_repo (str): A zet repo name to
                 append to an existing env file.
